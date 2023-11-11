@@ -15,17 +15,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switchOnOff"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:thumb="@drawable/thumb_selector"
-            app:track="@drawable/track_selector"
-            tools:ignore="VisualLintOverlap" />
-
         <LinearLayout
             android:layout_width="142dp"
             android:layout_height="51dp"
+            android:layout_marginStart="37dp"
+            android:layout_marginTop="71dp"
             android:orientation="horizontal"
             android:weightSum="2">
 
@@ -36,7 +30,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="No"
+                android:text="Adam"
                 android:textColor="@color/white"
                 android:textSize="12sp"
                 tools:ignore="HardcodedText,TextContrastCheck" />
@@ -48,13 +42,30 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Yes"
+                android:text="Shahar"
                 android:textColor="#4282DC"
                 android:textSize="12sp"
                 tools:ignore="HardcodedText,TextContrastCheck" />
 
 
         </LinearLayout>
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchOnOff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="94dp"
+            android:layout_marginTop="252dp"
+            android:thumb="@drawable/thumb_backgrounds"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:showText="false"
+            app:track="@drawable/track_backgrounds" />
 
     </RelativeLayout>
 
