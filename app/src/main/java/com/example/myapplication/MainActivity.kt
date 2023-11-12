@@ -27,11 +27,11 @@ class MainActivity : AppCompatActivity() {
             if (switch.isChecked) {
                 containerRL.background = ResourcesCompat.getDrawable(resources, R.drawable.background_shahar, null)
                 tvSwitchShahar.setTextColor(ContextCompat.getColor(this,R.color.white))
-                tvSwitchAdam.setTextColor(ContextCompat.getColor(this,R.color.blue_color))
+                tvSwitchAdam.setTextColor(ContextCompat.getColor(this,R.color.blue))
             }
             else {
                 containerRL.background = ResourcesCompat.getDrawable(resources, R.drawable.background_adam, null)
-                tvSwitchShahar.setTextColor(ContextCompat.getColor(this,R.color.blue_color))
+                tvSwitchShahar.setTextColor(ContextCompat.getColor(this,R.color.blue))
                 tvSwitchAdam.setTextColor(ContextCompat.getColor(this,R.color.white))
             }
         }
