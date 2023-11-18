@@ -7,7 +7,6 @@ import androidx.activity.ComponentActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,25 +31,6 @@ class MainActivity : ComponentActivity() {
                 tvSwitchShahar.setTextColor(ContextCompat.getColor(this,R.color.blue))
                 tvSwitchAdam.setTextColor(ContextCompat.getColor(this,R.color.white))
 
-            }
-        }
-        val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
-
-        bottomNavigationView.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navigation_home -> {
-                    // Handle home item click
-                    true
-                }
-                R.id.navigation_dashboard -> {
-                    // Handle dashboard item click
-                    true
-                }
-                R.id.navigation_notifications -> {
-                    // Handle notifications item click
-                    true
-                }
-                else -> false
             }
         }
 
