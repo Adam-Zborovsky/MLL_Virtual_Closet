@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group
+        android:id="@+id/group1"
+        android:checkableBehavior="all">
+        <item
+        android:id="@+id/filter"
+        android:title="Filter">
+            <menu>
+                <item
+                    android:id="@+id/item1"
+                    android:checked="true"
+                    android:icon="@drawable/shirt"
+                    android:title="Shirts"
+                    android:checkable="true"
+                    app:itemVerticalPadding="120dp"/>
+                <item
+                    android:id="@+id/item2"
+                    android:checked="true"
+                    android:icon="@drawable/pants"
+                    android:title="Pants"
+                    android:checkable="true"/>
+            </menu>
+        </item>
+    </group>
+    <group
+        android:id="@+id/group2"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/sortBy"
+            android:title="Sort By">
+            <menu>
+                <item
+                    android:id="@+id/item4"
+                    android:checked="true"
+                    android:icon="@drawable/like"
+                    android:title="Adam Likes"
+                    android:checkable="true"/>
+
+                <item
+                    android:id="@+id/item5"
+                    android:checked="false"
+                    android:icon="@drawable/like"
+                    android:title="Shahar Likes"
+                    android:checkable="true"/>
+
+            </menu>
+        </item>
+    </group>
+
+</menu>
