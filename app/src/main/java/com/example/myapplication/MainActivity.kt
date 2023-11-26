@@ -1,5 +1,3 @@
-@file:Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-
 package com.example.myapplication
 
 import android.annotation.SuppressLint
@@ -69,7 +67,7 @@ class MainActivity : ComponentActivity() {
                 val data = it.data
                 val imgUri = data?.data
                 Log.i("Uri", imgUri.toString())
-                showEditTextDialog()
+                val (name, adamLike, shaharLike ,typeOfCloths) = showEditTextDialog()
                 if (imgUri != null) {
                     imgUri.lastPathSegment?.let {
                         val photoRef = storageRef.child("photos")
@@ -96,16 +94,18 @@ class MainActivity : ComponentActivity() {
         with(builder) {
             setPositiveButton("Ok") { _, _ ->
                 Log.d("Main", "Positive button clicked")
+                Log.i("Name", name.text.toString())
+                Log.i("Adam Like", adamLike.text.toString())
+                Log.i("Shahar Like", shaharLike.text.toString())
+                Log.i("typeOfCloths", typeOfCloths.toString())
+                return arrayListOf<Any>(name.text.toString(), adamLike.text.toString(), shaharLike.text.toString() ,typeOfCloths.isChecked)
             }
             setNegativeButton("Cancel") { _, _ ->
                 Log.d("Main", "Negative button clicked")
+                return null, null, null, null
             }
             setView(dialogLayout)
             show()
         }
-        Log.i("Name", name.editableText.toString())
-        Log.i("Adam Like", adamLike.editableText.toString())
-        Log.i("Shahar Like", shaharLike.editableText.toString())
-        Log.i("typeOfCloths", typeOfCloths.toString())
     }
 }
