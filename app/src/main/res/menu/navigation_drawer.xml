@@ -10,14 +10,14 @@
         android:title="Filter">
             <menu>
                 <item
-                    android:id="@+id/item1"
+                    android:id="@+id/shirtIco"
                     android:checked="true"
                     android:icon="@drawable/shirt"
                     android:title="Shirts"
                     android:checkable="true"
                     app:itemVerticalPadding="120dp"/>
                 <item
-                    android:id="@+id/item2"
+                    android:id="@+id/pantsIco"
                     android:checked="true"
                     android:icon="@drawable/pants"
                     android:title="Pants"
@@ -33,17 +33,23 @@
             android:title="Sort By">
             <menu>
                 <item
-                    android:id="@+id/item4"
+                    android:id="@+id/likeA"
                     android:checked="true"
                     android:icon="@drawable/like"
                     android:title="Adam Likes"
                     android:checkable="true"/>
 
                 <item
-                    android:id="@+id/item5"
-                    android:checked="false"
+                    android:id="@+id/likeS"
+                    android:checked="true"
                     android:icon="@drawable/like"
                     android:title="Shahar Likes"
+                    android:checkable="true"/>
+                <item
+                    android:id="@+id/rnd"
+                    android:checked="true"
+                    android:icon="@android:drawable/stat_notify_sync"
+                    android:title="Random Order"
                     android:checkable="true"/>
 
             </menu>

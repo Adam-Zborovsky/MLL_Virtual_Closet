@@ -11,7 +11,17 @@
         android:id="@+id/idToolbar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@android:color/transparent" />
+        android:background="@android:color/transparent">
+        <ImageView
+            android:id="@+id/menuButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:src="@android:drawable/ic_menu_view"
+            android:contentDescription="menu" />
+    </androidx.appcompat.widget.Toolbar>
+
+
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawerLayout"
@@ -28,80 +38,11 @@
                 android:layout_height="match_parent" >
 
                 <LinearLayout
+                    android:id="@+id/linearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <ImageButton
-                            android:id="@+id/imageButton1"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginVertical="150dp"
-                            android:background="@android:color/transparent"
-                            android:contentDescription="Cloths"
-                            tools:ignore="ImageContrastCheck,DuplicateSpeakableTextCheck"
-                            tools:src="res\pic_databasedownload.jpeg"
-                            tools:srcCompat="@tools:sample/avatars[7]" />
-
-                        <TextView
-                            android:id="@+id/textView1"
-                            android:layout_width="match_parent"
-                            android:layout_height="150dp"
-                            android:padding="14dp"
-                            android:text="Adam: 0/10            Shahar: 0/10" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <ImageButton
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginVertical="150dp"
-                            android:background="@android:color/transparent"
-                            android:contentDescription="Cloths"
-                            tools:ignore="DuplicateIds,DuplicateSpeakableTextCheck,ImageContrastCheck"
-                            tools:src="res\pic_databasedownload.jpeg"
-                            tools:srcCompat="@tools:sample/avatars[7]" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="150dp"
-                            android:padding="14dp"
-                            android:text="Adam: 0/10            Shahar: 0/10" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <ImageButton
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginVertical="150dp"
-                            android:background="@android:color/transparent"
-                            android:contentDescription="Cloths"
-                            tools:ignore="ImageContrastCheck,DuplicateSpeakableTextCheck"
-                            tools:src="res\pic_databasedownload.jpeg"
-                            tools:srcCompat="@tools:sample/avatars[7]" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="150dp"
-                            android:padding="14dp"
-                            android:text="Adam: 0/10            Shahar: 0/10" />
-
-                    </LinearLayout>
 
                 </LinearLayout>
             </ScrollView>
@@ -173,7 +114,7 @@
             app:menu="@menu/navigation_drawer">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/button1"
+                android:id="@+id/uploadBT"
                 android:layout_width="55dp"
                 android:layout_height="50dp"
                 android:layout_gravity="bottom"

@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "63259703479",
+    "firebase_url": "https://plucky-weaver-394521-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "plucky-weaver-394521",
+    "storage_bucket": "plucky-weaver-394521.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:63259703479:android:1ca9ad2f3d7e86ca197532",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ4Bt7f4Vg5QAIyAvgP4pujSfS0smTDmM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
