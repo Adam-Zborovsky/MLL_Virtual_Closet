@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="388dp"
-    android:layout_height="200dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <EditText
         android:id="@+id/name"
         android:layout_width="235dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="70dp"
+        android:layout_gravity="center"
         android:autofillHints="color-color2-style"
         android:ems="10"
         android:hint="Name:E.g: color-color2-style"
         android:inputType="text"
+        android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,7 +32,8 @@
             android:gravity="end"
             android:text="Pants "
             android:textColor="#4282DC"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            tools:ignore="TextSizeCheck" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchCloths"
@@ -47,14 +51,15 @@
             android:layout_weight="1"
             android:text=" Shirt"
             android:textColor="#4282DC"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            tools:ignore="TextSizeCheck" />
     </LinearLayout>
 
     <EditText
         android:id="@+id/shaharLike"
         android:layout_width="235dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="70dp"
+        android:layout_gravity="center"
         android:autofillHints=""
         android:ems="10"
         android:hint="Shahar Rating: E.g: ?/10"
@@ -65,7 +70,7 @@
         android:id="@+id/adamLike"
         android:layout_width="235dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="70dp"
+        android:layout_gravity="center"
         android:autofillHints=""
         android:ems="10"
         android:hint="Adam Rating: E.g: ?/10"

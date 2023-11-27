@@ -1,6 +1,5 @@
 package com.example.myapplication
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
@@ -13,6 +12,7 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.activity.ComponentActivity
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
@@ -20,6 +20,7 @@ import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Firebase
+import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.storage
 
 
@@ -60,29 +61,25 @@ class MainActivity : ComponentActivity() {
         menuButton.setOnClickListener {
             naviview.foregroundGravity
         }
-        val uploadButton = findViewById<MaterialButton>(R.id.uploadBT)
-        val pickImg = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-        val changeImage =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { it ->
-                val data = it.data
-                val imgUri = data?.data
-                Log.i("Uri", imgUri.toString())
-                val (name, adamLike, shaharLike ,typeOfCloths) = showEditTextDialog()
-                if (imgUri != null) {
-                    imgUri.lastPathSegment?.let {
-                        val photoRef = storageRef.child("photos")
-                            .child(it)
-                        photoRef.putFile(imgUri)
-                    }
-                }
-            }
 
-        uploadButton.setOnClickListener {
-            changeImage.launch(pickImg)
+        val uploadButton = findViewById<MaterialButton>(R.id.uploadBT)
+        var selcetedUri: Uri? = null
+        val pickImg = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+        val chooseImage = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { it ->
+            val data = it.data
+            val imgUri = data?.data
+            imgUri
         }
+        var metadata: ArrayList<Any>? = null
+        uploadButton.setOnClickListener {
+            metadata = metaOfFile(pickImg, chooseImage)
+        }
+
+
     }
-    @SuppressLint("InflateParams")
-    private fun showEditTextDialog(){
+
+    private fun metaOfFile(pickImg:Intent, chooseImage: ActivityResultLauncher<Intent>): ArrayList<Any>? {
+        var metadata: ArrayList<Any>? = null
         val builder = AlertDialog.Builder(this)
         val inflater: LayoutInflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.upload_dialog_box, null)
@@ -91,21 +88,20 @@ class MainActivity : ComponentActivity() {
         val shaharLike = dialogLayout.findViewById<EditText>(R.id.shaharLike)
         val typeOfCloths = dialogLayout.findViewById<SwitchCompat>(R.id.switchCloths)
 
-        with(builder) {
-            setPositiveButton("Ok") { _, _ ->
-                Log.d("Main", "Positive button clicked")
-                Log.i("Name", name.text.toString())
-                Log.i("Adam Like", adamLike.text.toString())
-                Log.i("Shahar Like", shaharLike.text.toString())
-                Log.i("typeOfCloths", typeOfCloths.toString())
-                return arrayListOf<Any>(name.text.toString(), adamLike.text.toString(), shaharLike.text.toString() ,typeOfCloths.isChecked)
-            }
-            setNegativeButton("Cancel") { _, _ ->
-                Log.d("Main", "Negative button clicked")
-                return null, null, null, null
-            }
-            setView(dialogLayout)
-            show()
+        builder.setView(dialogLayout)
+        builder.setPositiveButton("Ok") { _, _ ->
+            Log.d("Main", "Positive button clicked")
+            Log.i("Name", name.text.toString())
+            Log.i("Adam Like", adamLike.text.toString())
+            Log.i("Shahar Like", shaharLike.text.toString())
+            Log.i("typeOfCloths", typeOfCloths.isChecked.toString())
+            metadata = arrayListOf(name.text.toString(), adamLike.text.toString(), shaharLike.text.toString() ,typeOfCloths.isChecked)
+            chooseImage.launch(pickImg)
         }
+        builder.setNegativeButton("Cancel") { _, _ ->
+            Log.d("Main", "Negative button clicked")}
+        builder.show()
+
+        return metadata
     }
 }
