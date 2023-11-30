@@ -20,12 +20,14 @@ import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Firebase
-import com.google.firebase.storage.UploadTask
+import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.storage
 
 
 class MainActivity : ComponentActivity() {
     private var storageRef = Firebase.storage.reference
+    private var db = Firebase.firestore
+    private var uri: Uri? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -63,22 +65,23 @@ class MainActivity : ComponentActivity() {
         }
 
         val uploadButton = findViewById<MaterialButton>(R.id.uploadBT)
-        var selcetedUri: Uri? = null
-        val pickImg = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-        val chooseImage = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { it ->
-            val data = it.data
-            val imgUri = data?.data
-            imgUri
-        }
-        var metadata: ArrayList<Any>? = null
-        uploadButton.setOnClickListener {
-            metadata = metaOfFile(pickImg, chooseImage)
-        }
 
+        val pickImg = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+        val chooseImage =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { it ->
+                val data = it.data
+                val imgUri = data?.data
+                Log.i("Uri",imgUri.toString())
+                if (imgUri != null){uri = imgUri}
+            }
+        uploadButton.setOnClickListener {
+            chooseImage.launch(pickImg).toString()
+            metaOfFile(pickImg, chooseImage)
+        }
 
     }
 
-    private fun metaOfFile(pickImg:Intent, chooseImage: ActivityResultLauncher<Intent>): ArrayList<Any>? {
+    private fun metaOfFile(pickImg:Intent, chooseImage: ActivityResultLauncher<Intent>){
         var metadata: ArrayList<Any>? = null
         val builder = AlertDialog.Builder(this)
         val inflater: LayoutInflater = layoutInflater
@@ -91,17 +94,37 @@ class MainActivity : ComponentActivity() {
         builder.setView(dialogLayout)
         builder.setPositiveButton("Ok") { _, _ ->
             Log.d("Main", "Positive button clicked")
-            Log.i("Name", name.text.toString())
-            Log.i("Adam Like", adamLike.text.toString())
-            Log.i("Shahar Like", shaharLike.text.toString())
-            Log.i("typeOfCloths", typeOfCloths.isChecked.toString())
             metadata = arrayListOf(name.text.toString(), adamLike.text.toString(), shaharLike.text.toString() ,typeOfCloths.isChecked)
-            chooseImage.launch(pickImg)
+            Log.i("Metadata", metadata.toString())
+            uploadFile(metadata)
         }
         builder.setNegativeButton("Cancel") { _, _ ->
             Log.d("Main", "Negative button clicked")}
         builder.show()
 
-        return metadata
+    }
+
+    private fun uploadFile(metadata: ArrayList<Any>?) {
+        if (uri != null) {
+            val ref = storageRef.child(metadata!![0].toString())
+            val uploadTask = ref.putFile(uri!!)
+            val urlTask = uploadTask.continueWithTask {
+                ref.downloadUrl
+            }.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val downloadUri = task.result
+                    val folder = if (metadata[3] as Boolean){"Shirts"} else{"Pants"}
+                    db.collection(folder).document(metadata[0].toString())
+                        .set(hashMapOf("Url" to downloadUri, "AdamLikes" to metadata[1].toString().toInt(), "ShaharLikes" to metadata[2].toString().toInt()))
+                        .addOnSuccessListener {
+                            Log.d(
+                                "db.collection",
+                                "DocumentSnapshot successfully written!"
+                            )
+                        }
+                        .addOnFailureListener { Log.e("db.collection", "Error writing document",) }
+                }
+            }
+        }
     }
 }
