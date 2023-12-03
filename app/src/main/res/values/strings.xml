@@ -2,4 +2,6 @@
     <string name="app_name">My Application</string>
     <string name="nav_open">Open</string>
     <string name="nav_close">Close</string>
+    <string name="open_drawer">open</string>
+    <string name="close_drawer">colse</string>
 </resources>

@@ -21,7 +21,7 @@
                     android:checked="true"
                     android:icon="@drawable/pants"
                     android:title="Pants"
-                    android:checkable="true"/>
+                    android:checkable="false"/>
             </menu>
         </item>
     </group>
@@ -34,14 +34,14 @@
             <menu>
                 <item
                     android:id="@+id/likeA"
-                    android:checked="true"
+                    android:checked="false"
                     android:icon="@drawable/like"
                     android:title="Adam Likes"
                     android:checkable="true"/>
 
                 <item
                     android:id="@+id/likeS"
-                    android:checked="true"
+                    android:checked="false"
                     android:icon="@drawable/like"
                     android:title="Shahar Likes"
                     android:checkable="true"/>

@@ -6,17 +6,20 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.activity.ComponentActivity
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Firebase
@@ -31,10 +34,13 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
+        val toolBar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolBar)
         val menuButton = findViewById<ImageView>(R.id.menuButton)
         val switchOnOff = findViewById<SwitchCompat>(R.id.switchOnOff)
         val containerRL = findViewById<RelativeLayout>(R.id.idRLContainer)
-        val naviview = findViewById<NavigationView>(R.id.idNaviView)
+        val naviview = findViewById<NavigationView>(R.id.naviView)
         val tvSwitchShahar = findViewById<TextView>(R.id.tvSwitchYes)
         val tvSwitchAdam = findViewById<TextView>(R.id.tvSwitchNo)
         var switch = false
@@ -60,15 +66,17 @@ class MainActivity : ComponentActivity() {
 
             }
         }
+
         menuButton.setOnClickListener {
-            naviview.foregroundGravity
+            drawerLayout.openDrawer(GravityCompat.END)
+            Log.i("Menu Button", "pressd")
         }
 
         val uploadButton = findViewById<MaterialButton>(R.id.uploadBT)
 
         val pickImg = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
         val chooseImage =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { it ->
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 val data = it.data
                 val imgUri = data?.data
                 Log.i("Uri",imgUri.toString())
@@ -76,13 +84,12 @@ class MainActivity : ComponentActivity() {
             }
         uploadButton.setOnClickListener {
             chooseImage.launch(pickImg).toString()
-            metaOfFile(pickImg, chooseImage)
+            metaOfFile()
         }
 
     }
 
-    private fun metaOfFile(pickImg:Intent, chooseImage: ActivityResultLauncher<Intent>){
-        var metadata: ArrayList<Any>? = null
+    private fun metaOfFile(){
         val builder = AlertDialog.Builder(this)
         val inflater: LayoutInflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.upload_dialog_box, null)
@@ -94,20 +101,20 @@ class MainActivity : ComponentActivity() {
         builder.setView(dialogLayout)
         builder.setPositiveButton("Ok") { _, _ ->
             Log.d("Main", "Positive button clicked")
-            metadata = arrayListOf(name.text.toString(), adamLike.text.toString(), shaharLike.text.toString() ,typeOfCloths.isChecked)
-            Log.i("Metadata", metadata.toString())
+            val metadata: ArrayList<Any> = arrayListOf(name.text.toString(), adamLike.text.toString(), shaharLike.text.toString() ,typeOfCloths.isChecked)
             uploadFile(metadata)
         }
         builder.setNegativeButton("Cancel") { _, _ ->
             Log.d("Main", "Negative button clicked")}
         builder.show()
-
     }
 
-    private fun uploadFile(metadata: ArrayList<Any>?) {
+    private fun uploadFile(metadata: ArrayList<Any>) {
         if (uri != null) {
-            val ref = storageRef.child(metadata!![0].toString())
+            val ref = storageRef.child(metadata[0].toString())
             val uploadTask = ref.putFile(uri!!)
+            uploadTask.addOnSuccessListener { Log.d("Upload To Storage", "Success") }
+                .addOnFailureListener{Log.e("Upload To Storage", "Failed")}
             val urlTask = uploadTask.continueWithTask {
                 ref.downloadUrl
             }.addOnCompleteListener { task ->
@@ -116,13 +123,9 @@ class MainActivity : ComponentActivity() {
                     val folder = if (metadata[3] as Boolean){"Shirts"} else{"Pants"}
                     db.collection(folder).document(metadata[0].toString())
                         .set(hashMapOf("Url" to downloadUri, "AdamLikes" to metadata[1].toString().toInt(), "ShaharLikes" to metadata[2].toString().toInt()))
-                        .addOnSuccessListener {
-                            Log.d(
-                                "db.collection",
-                                "DocumentSnapshot successfully written!"
-                            )
-                        }
-                        .addOnFailureListener { Log.e("db.collection", "Error writing document",) }
+
+                        .addOnSuccessListener {Log.d(  "Upload To Database","DocumentSnapshot successfully written!")}
+                        .addOnFailureListener { Log.e("Upload To Database", "Error writing document") }
                 }
             }
         }
