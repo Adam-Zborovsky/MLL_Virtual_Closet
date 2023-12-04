@@ -6,19 +6,17 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.EditText
-import android.widget.ImageView
+import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.navigation.NavigationView
@@ -34,13 +32,15 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val scrollView = findViewById<LinearLayout>(R.id.linearLayout)
+        val naviview = findViewById<NavigationView>(R.id.naviView)
+        showOnScreen(scrollView, naviview)
 
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
-        val toolBar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolBar)
-        val menuButton = findViewById<ImageView>(R.id.menuButton)
+        val uploadButton = findViewById<MaterialButton>(R.id.uploadBT)
+        val menuButton = findViewById<ImageButton>(R.id.menuButton)
         val switchOnOff = findViewById<SwitchCompat>(R.id.switchOnOff)
         val containerRL = findViewById<RelativeLayout>(R.id.idRLContainer)
-        val naviview = findViewById<NavigationView>(R.id.naviView)
         val tvSwitchShahar = findViewById<TextView>(R.id.tvSwitchYes)
         val tvSwitchAdam = findViewById<TextView>(R.id.tvSwitchNo)
         var switch = false
@@ -68,11 +68,10 @@ class MainActivity : ComponentActivity() {
         }
 
         menuButton.setOnClickListener {
-            drawerLayout.openDrawer(GravityCompat.END)
-            Log.i("Menu Button", "pressd")
+//            drawerLayout.openDrawer(GravityCompat.END)
+            Log.i("Menu Button", "pressed")
         }
 
-        val uploadButton = findViewById<MaterialButton>(R.id.uploadBT)
 
         val pickImg = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
         val chooseImage =
@@ -83,6 +82,7 @@ class MainActivity : ComponentActivity() {
                 if (imgUri != null){uri = imgUri}
             }
         uploadButton.setOnClickListener {
+            Log.i("Upload Button", "pressed")
             chooseImage.launch(pickImg).toString()
             metaOfFile()
         }
@@ -129,5 +129,9 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun showOnScreen(scrollView: LinearLayout, naviview: NavigationView) {
+
     }
 }
