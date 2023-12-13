@@ -1,39 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
+    android:id="@+id/idRLContainer"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/idRLContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolBar"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@android:color/transparent">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <ImageButton
-                android:id="@+id/menuButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:contentDescription="menu"
-                android:src="@drawable/ic_menu"
-                android:background="@android:color/transparent"
-                android:layout_marginStart="15dp"
-                tools:ignore="ImageContrastCheck" />
-        </LinearLayout>
-    </androidx.appcompat.widget.Toolbar>
-
-
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawerLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:context=".MainActivity" >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -50,7 +30,23 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="50dp"
+                                android:drawableTop="@drawable/common_google_signin_btn_text_dark"/>
 
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:drawableTop="@drawable/common_google_signin_btn_text_dark" />
+
+                    </LinearLayout>
                 </LinearLayout>
             </ScrollView>
 
@@ -125,10 +121,10 @@
                 android:layout_width="55dp"
                 android:layout_height="50dp"
                 android:layout_gravity="bottom"
-                android:layout_marginBottom="60dp"
                 android:layout_marginStart="25dp"
+                android:layout_marginBottom="60dp"
                 android:theme="@style/Theme.MaterialComponents"
-                app:icon="@android:drawable/stat_sys_upload_done"/>
+                app:icon="@android:drawable/stat_sys_upload_done" />
 
         </com.google.android.material.navigation.NavigationView>
 

@@ -2,13 +2,13 @@ package com.example.myapplication
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -18,6 +18,9 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.bumptech.glide.request.transition.Transition
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Firebase
@@ -38,7 +41,6 @@ class MainActivity : ComponentActivity() {
 
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
         val uploadButton = findViewById<MaterialButton>(R.id.uploadBT)
-        val menuButton = findViewById<ImageButton>(R.id.menuButton)
         val switchOnOff = findViewById<SwitchCompat>(R.id.switchOnOff)
         val containerRL = findViewById<RelativeLayout>(R.id.idRLContainer)
         val tvSwitchShahar = findViewById<TextView>(R.id.tvSwitchYes)
@@ -66,11 +68,7 @@ class MainActivity : ComponentActivity() {
 
             }
         }
-
-        menuButton.setOnClickListener {
-//            drawerLayout.openDrawer(GravityCompat.END)
-            Log.i("Menu Button", "pressed")
-        }
+        if (switch){Log.i("", "")}
 
 
         val pickImg = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
@@ -111,18 +109,18 @@ class MainActivity : ComponentActivity() {
 
     private fun uploadFile(metadata: ArrayList<Any>) {
         if (uri != null) {
-            val ref = storageRef.child(metadata[0].toString())
+            val folder = if (metadata[3] as Boolean){"Shirts"} else{"Pants"}
+            val ref = storageRef.child(folder +"/"+ metadata[0].toString())
             val uploadTask = ref.putFile(uri!!)
             uploadTask.addOnSuccessListener { Log.d("Upload To Storage", "Success") }
                 .addOnFailureListener{Log.e("Upload To Storage", "Failed")}
-            val urlTask = uploadTask.continueWithTask {
+            uploadTask.continueWithTask {
                 ref.downloadUrl
             }.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val downloadUri = task.result
-                    val folder = if (metadata[3] as Boolean){"Shirts"} else{"Pants"}
                     db.collection(folder).document(metadata[0].toString())
-                        .set(hashMapOf("Url" to downloadUri, "AdamLikes" to metadata[1].toString().toInt(), "ShaharLikes" to metadata[2].toString().toInt()))
+                        .set(hashMapOf("URL" to downloadUri, "AdamLikes" to metadata[1].toString().toInt(), "ShaharLikes" to metadata[2].toString().toInt()))
 
                         .addOnSuccessListener {Log.d(  "Upload To Database","DocumentSnapshot successfully written!")}
                         .addOnFailureListener { Log.e("Upload To Database", "Error writing document") }
@@ -132,6 +130,42 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun showOnScreen(scrollView: LinearLayout, naviview: NavigationView) {
+        val items = mutableListOf<MutableMap<String, Any>>()
+        db.collection("Shirts")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    items.add(document.data)
+                    val textView = TextView(this)
+                    textView.text = "Hello, Kotlin TextView!"
+                    textView.layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+
+                    Glide.with(this)
+                        .asDrawable()
+                        .load(document.data["URL"])
+                        .into(object : CustomTarget<Drawable>() {
+                            override fun onResourceReady(
+                                resource: Drawable,
+                                transition: Transition<in Drawable>?
+                            ) {
+                                // Set the loaded drawable to the TextView
+                                textView.setCompoundDrawablesWithIntrinsicBounds(null, resource, null, null)
+                            }
+
+                            override fun onLoadCleared(placeholder: Drawable?) {
+                                // Handle case where the image loading was canceled
+                            }
+                        })
+
+                    scrollView.addView(textView)
+                }
+            }
+            .addOnFailureListener { exception ->
+                 Log.d("Error getting documents: ", exception.toString())
+            }
 
     }
 }
