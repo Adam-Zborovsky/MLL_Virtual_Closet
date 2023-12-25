@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        showOnScreen()
+        downFromDatabase()
 
         val naviview = findViewById<NavigationView>(R.id.naviView)
         val uploadButton = findViewById<MaterialButton>(R.id.uploadBT)
@@ -123,7 +123,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun showOnScreen() {
+    private fun downFromDatabase() {
         val items = ArrayList<Cloths>()
         val recyclerview = findViewById<RecyclerView>(R.id.recyclerView)
         recyclerview.layoutManager = GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
@@ -132,8 +132,20 @@ class MainActivity : ComponentActivity() {
             .addOnSuccessListener { result ->
                 for (document in result) {
                     val dat = document.data
-                    items.add(Cloths(dat["Name"].toString(), dat["ShaharLikes"].toString().toInt(), dat["AdamLikes"].toString().toInt(), dat["Url"].toString()))
-
+                    items.add(Cloths(dat["Name"].toString(),"Shirts", dat["ShaharLikes"].toString().toInt(), dat["AdamLikes"].toString().toInt(), dat["URL"].toString()))
+                    val adapter = ClothsAdapter(items)
+                    recyclerview.adapter = adapter
+                }
+            }
+            .addOnFailureListener { exception ->
+                 Log.d("Error getting documents: ", exception.toString())
+            }
+        db.collection("Pants")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    val dat = document.data
+                    items.add(Cloths(dat["Name"].toString(),"Shirts", dat["ShaharLikes"].toString().toInt(), dat["AdamLikes"].toString().toInt(), dat["URL"].toString()))
                     val adapter = ClothsAdapter(items)
                     recyclerview.adapter = adapter
                 }

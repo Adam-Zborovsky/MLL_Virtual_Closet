@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.MyApplication" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.MyApplication" parent="Theme.MaterialComponents.Light.NoActionBar" />
     <style name="Headline.header" parent="TextAppearance.Material3.HeadlineLarge">
         <item name="android:textSize">24sp</item>
     </style>
