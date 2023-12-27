@@ -23,7 +23,24 @@
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:listitem="@layout/view_design" />
+                android:layout_marginTop="40dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:listitem="@layout/view_design">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <ImageButton
+                android:id="@+id/openNav"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/ic_menu"
+                android:contentDescription="open nav"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <RelativeLayout
                 android:layout_width="125dp"

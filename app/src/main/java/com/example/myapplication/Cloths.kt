@@ -7,5 +7,8 @@ data class Cloths(
     val aLike: Int,
     val photoUrl: String,
     val matching: ArrayList<String> = arrayListOf<String>()
-    )
-
+    ) {
+    override fun toString(): String {
+        return "$name,$typeCloth,$sLike,$aLike,$photoUrl"
+    }
+}

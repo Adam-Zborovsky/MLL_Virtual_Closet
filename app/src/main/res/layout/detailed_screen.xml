@@ -6,59 +6,87 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/editButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/edit_ico"
+            android:contentDescription="Edit" />
+
+        <ImageButton
+            android:id="@+id/addButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="775dp"
+            android:background="@drawable/add_ic"
+            android:contentDescription="Add" />
+
+    </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="300dp"
+        android:layout_marginTop="50dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/prodName"
-            android:layout_width="300dp"
+            android:layout_width="275dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textAlignment="center"
-            android:textSize="24sp"/>
+            android:textColor="@color/black"
+            android:textSize="24sp" />
 
         <ImageView
             android:id="@+id/prod"
-            android:layout_width="300dp"
-            android:layout_marginTop="10dp"
-            android:layout_height="375dp"
+            android:layout_width="200dp"
+            android:layout_height="250dp"
             android:layout_gravity="center"
-            android:src="@color/cardview_dark_background"
-            android:contentDescription="product image"/>
+            android:layout_marginTop="10dp"
+            android:contentDescription="product image"
+            android:src="@color/cardview_dark_background" />
 
         <TextView
             android:id="@+id/like"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_gravity="center"
+            android:layout_marginTop="10dp"
             android:textAlignment="center"
-            android:textSize="16sp"/>
+            android:textColor="@color/black"
+            android:textSize="16sp" />
 
         <ImageView
             android:layout_width="350dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:src="@drawable/divider_line"
-            android:contentDescription="line" />
+            android:contentDescription="line"
+            android:src="@drawable/divider_line" />
 
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/matching"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="410dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="20dp"
-        app:layout_constraintTop_toBottomOf="@id/linearLayout">
+        app:layout_constraintTop_toTopOf="parent">
 
     </androidx.recyclerview.widget.RecyclerView>
 </androidx.constraintlayout.widget.ConstraintLayout>

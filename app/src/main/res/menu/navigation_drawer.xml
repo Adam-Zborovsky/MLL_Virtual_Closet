@@ -21,7 +21,7 @@
                     android:checked="true"
                     android:icon="@drawable/pants"
                     android:title="Pants"
-                    android:checkable="false"/>
+                    android:checkable="true"/>
             </menu>
         </item>
     </group>

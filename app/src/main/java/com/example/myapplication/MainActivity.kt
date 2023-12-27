@@ -8,6 +8,7 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.activity.ComponentActivity
@@ -15,6 +16,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
@@ -28,6 +31,8 @@ class MainActivity : ComponentActivity() {
     private var storageRef = Firebase.storage.reference
     private var db = Firebase.firestore
     private var uri: Uri? = null
+    private val items = ArrayList<Cloths>()
+    private val adapter = ClothsAdapter(items)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -44,26 +49,28 @@ class MainActivity : ComponentActivity() {
             ResourcesCompat.getDrawable(resources, R.drawable.background_adam, null)
 
         switchOnOff.setOnClickListener {
+            adapter.switchFlip()
+            val (backgroundResId, shaharTextColor, adamTextColor) =
             if (switchOnOff.isChecked) {
-                switch = true
-                containerRL.background =
-                    ResourcesCompat.getDrawable(resources, R.drawable.background_shahar, null)
-                naviview.background = containerRL.background
-                tvSwitchShahar.setTextColor(ContextCompat.getColor(this, R.color.white))
-                tvSwitchAdam.setTextColor(ContextCompat.getColor(this, R.color.blue))
-
-            } else {
-                switch = false
-                containerRL.background =
-                    ResourcesCompat.getDrawable(resources, R.drawable.background_adam, null)
-                naviview.background = containerRL.background
-                tvSwitchShahar.setTextColor(ContextCompat.getColor(this, R.color.blue))
-                tvSwitchAdam.setTextColor(ContextCompat.getColor(this, R.color.white))
-
+                Triple(R.drawable.background_shahar, R.color.white, R.color.blue)
             }
-        }
-        if (switch){Log.i("", "")}
+            else {
+                Triple(R.drawable.background_adam, R.color.blue, R.color.white)
+            }
+            containerRL.background = ResourcesCompat.getDrawable(resources, backgroundResId, null)
+            naviview.background = containerRL.background
+            tvSwitchShahar.setTextColor(ContextCompat.getColor(this, shaharTextColor))
+            tvSwitchAdam.setTextColor(ContextCompat.getColor(this, adamTextColor))
 
+            switch = !switch
+        }
+
+        val openNav = findViewById<ImageButton>(R.id.openNav)
+        val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
+
+        openNav.setOnClickListener {
+            drawerLayout.openDrawer(GravityCompat.START)
+        }
 
         val pickImg = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
         val chooseImage =
@@ -78,6 +85,37 @@ class MainActivity : ComponentActivity() {
             chooseImage.launch(pickImg).toString()
             metaOfFile()
         }
+
+        naviview.setNavigationItemSelectedListener { menuItem ->
+            var needsUpdate = false
+
+            when (menuItem.itemId) {
+                R.id.shirtIco -> {
+                    menuItem.isChecked = !menuItem.isChecked
+                    needsUpdate = true
+                }
+                R.id.pantsIco -> {
+                    menuItem.isChecked = !menuItem.isChecked
+                    needsUpdate = true
+                }
+                R.id.likeA -> {
+                    adapter.sortByALike()
+                }
+                R.id.likeS -> {
+                    adapter.sortBySLike()
+                }
+                R.id.rnd -> {
+                    adapter.sortRandomly()
+                }
+            }
+            if (needsUpdate) {
+            val showShirts = naviview.menu.findItem(R.id.shirtIco).isChecked
+            val showPants = naviview.menu.findItem(R.id.pantsIco).isChecked
+            adapter.filterCloths(showShirts, showPants)
+        }
+            false
+        }
+
 
     }
 
@@ -94,7 +132,8 @@ class MainActivity : ComponentActivity() {
         builder.setPositiveButton("Ok") { _, _ ->
             Log.d("Main", "Positive button clicked")
             val metadata: ArrayList<Any> = arrayListOf(name.text.toString(), adamLike.text.toString(), shaharLike.text.toString() ,typeOfCloths.isChecked)
-            uploadFile(metadata)
+
+            if(items.none{it.name == name.text.toString()}){uploadFile(metadata)}
         }
         builder.setNegativeButton("Cancel") { _, _ ->
             Log.d("Main", "Negative button clicked")}
@@ -124,7 +163,6 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun downFromDatabase() {
-        val items = ArrayList<Cloths>()
         val recyclerview = findViewById<RecyclerView>(R.id.recyclerView)
         recyclerview.layoutManager = GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
         db.collection("Shirts")
@@ -133,8 +171,9 @@ class MainActivity : ComponentActivity() {
                 for (document in result) {
                     val dat = document.data
                     items.add(Cloths(dat["Name"].toString(),"Shirts", dat["ShaharLikes"].toString().toInt(), dat["AdamLikes"].toString().toInt(), dat["URL"].toString()))
-                    val adapter = ClothsAdapter(items)
                     recyclerview.adapter = adapter
+                    Log.e("List", items.toString())
+
                 }
             }
             .addOnFailureListener { exception ->
@@ -145,13 +184,16 @@ class MainActivity : ComponentActivity() {
             .addOnSuccessListener { result ->
                 for (document in result) {
                     val dat = document.data
-                    items.add(Cloths(dat["Name"].toString(),"Shirts", dat["ShaharLikes"].toString().toInt(), dat["AdamLikes"].toString().toInt(), dat["URL"].toString()))
-                    val adapter = ClothsAdapter(items)
+                    items.add(Cloths(dat["Name"].toString(),"Pants", dat["ShaharLikes"].toString().toInt(), dat["AdamLikes"].toString().toInt(), dat["URL"].toString(), arrayListOf("berger,Pants,10,10,https://firebasestorage.googleapis.com/v0/b/plucky-weaver-394521.appspot.com/o/Pants%2Fberger?alt=media&token=cdeb0667-4ed3-473e-8fd5-0933364dbfd1",
+                        "Haki Cargo,Pants,9,4,https://firebasestorage.googleapis.com/v0/b/plucky-weaver-394521.appspot.com/o/Pants%2FHaki%20Cargo?alt=media&token=3e88323b-78f7-47f3-bf8e-6212b2a9ffba",
+                        "Black with Whale ,Shirts,6,10,https://firebasestorage.googleapis.com/v0/b/plucky-weaver-394521.appspot.com/o/Shirts%2FBlack%20with%20Whale%20?alt=media&token=2d4bf42e-d3d0-4cf6-92b0-d978baccaa7c",
+                        "White Stripes,Shirts,3,9,https://firebasestorage.googleapis.com/v0/b/plucky-weaver-394521.appspot.com/o/Shirts%2FWhite%20Stripes?alt=media&token=699e561c-08e0-41b5-add0-d33e314881ad")))
                     recyclerview.adapter = adapter
                 }
             }
             .addOnFailureListener { exception ->
                  Log.d("Error getting documents: ", exception.toString())
             }
+
     }
 }
