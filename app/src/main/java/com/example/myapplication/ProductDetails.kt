@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -25,19 +24,31 @@ class ProductDetails : AppCompatActivity() {
         val aLike = intent.getIntExtra("aLike", 0)
         val photoUrl = intent.getStringExtra("photoUrl")
         val matching: ArrayList<String> = intent.getStringArrayListExtra("matching")as ArrayList<String>? ?: arrayListOf()
+        val fullList: ArrayList<String> = intent.getStringArrayListExtra("fullList")as ArrayList<String>? ?: arrayListOf()
+        Log.e("fullList",fullList.toString())
         val switch = intent.getBooleanExtra("switch", false)
 
-        val containerRL = findViewById<ConstraintLayout>(R.id.constraintLayout)
+        val containerRL = findViewById<ConstraintLayout>(R.id.containerRL)
         val prodName = findViewById<TextView>(R.id.prodName)
         val prod = findViewById<ImageView>(R.id.prod)
         val like = findViewById<TextView>(R.id.like)
         val edit = findViewById<ImageButton>(R.id.editButton)
-        val add = findViewById<ImageView>(R.id.addButton)
+        val add = findViewById<ImageButton>(R.id.addButton)
         val recyclerview = findViewById<RecyclerView>(R.id.matching)
 
-        val adapter = MatchingClothes(matching,switch)
+        val adapter = MatchingClothes(matching, false, fullList)
         recyclerview.layoutManager = LinearLayoutManager(this)
         recyclerview.adapter = adapter
+
+        add.setOnClickListener {
+            if (switch){
+                val intent = Intent(this, MatchingDetails::class.java)
+                intent.putExtra("matching", matching)
+                intent.putExtra("fullList", fullList)
+                intent.putExtra("typeCloth", typeCloth)
+                this.startActivity(intent)
+            }
+        }
 
         val backgroundResId = if (switch) {
                 R.drawable.background_shahar
@@ -53,7 +64,5 @@ class ProductDetails : AppCompatActivity() {
         prodName.text = name
         like.text = "Adam: $aLike          Shahar: $sLike"
 
-        add.setOnClickListener {
-        }
     }
 }

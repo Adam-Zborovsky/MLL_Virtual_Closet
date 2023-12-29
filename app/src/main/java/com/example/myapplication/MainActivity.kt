@@ -87,32 +87,27 @@ class MainActivity : ComponentActivity() {
         }
 
         naviview.setNavigationItemSelectedListener { menuItem ->
-            var needsUpdate = false
 
             when (menuItem.itemId) {
-                R.id.shirtIco -> {
+                R.id.shirtIco, R.id.pantsIco -> {
                     menuItem.isChecked = !menuItem.isChecked
-                    needsUpdate = true
+                    val showShirts = naviview.menu.findItem(R.id.shirtIco).isChecked
+                    val showPants = naviview.menu.findItem(R.id.pantsIco).isChecked
+                    adapter.filterCloths(showShirts, showPants)
                 }
-                R.id.pantsIco -> {
-                    menuItem.isChecked = !menuItem.isChecked
-                    needsUpdate = true
-                }
-                R.id.likeA -> {
-                    adapter.sortByALike()
-                }
-                R.id.likeS -> {
-                    adapter.sortBySLike()
-                }
-                R.id.rnd -> {
-                    adapter.sortRandomly()
+                R.id.likeA, R.id.likeS, R.id.rnd -> {
+                    naviview.menu.findItem(R.id.likeA).isChecked = false
+                    naviview.menu.findItem(R.id.likeS).isChecked = false
+                    naviview.menu.findItem(R.id.rnd).isChecked = false
+                    menuItem.isChecked = true
+
+                    when (menuItem.itemId) {
+                        R.id.likeA -> adapter.sortByALike()
+                        R.id.likeS -> adapter.sortBySLike()
+                        R.id.rnd -> adapter.sortRandomly()
+                    }
                 }
             }
-            if (needsUpdate) {
-            val showShirts = naviview.menu.findItem(R.id.shirtIco).isChecked
-            val showPants = naviview.menu.findItem(R.id.pantsIco).isChecked
-            adapter.filterCloths(showShirts, showPants)
-        }
             false
         }
 
@@ -153,7 +148,7 @@ class MainActivity : ComponentActivity() {
                 if (task.isSuccessful) {
                     val downloadUri = task.result
                     db.collection(folder).document(metadata[0].toString())
-                        .set(hashMapOf("Name" to metadata[0], "ShaharLikes" to metadata[2].toString().toInt(), "AdamLikes" to metadata[1].toString().toInt(), "URL" to downloadUri))
+                        .set(hashMapOf("Name" to metadata[0], "ShaharLikes" to metadata[2].toString().toInt(), "AdamLikes" to metadata[1].toString().toInt(), "URL" to downloadUri, "matching" to "[]"))
 
                         .addOnSuccessListener {Log.d(  "Upload To Database","DocumentSnapshot successfully written!")}
                         .addOnFailureListener { Log.e("Upload To Database", "Error writing document") }
@@ -170,11 +165,12 @@ class MainActivity : ComponentActivity() {
             .addOnSuccessListener { result ->
                 for (document in result) {
                     val dat = document.data
-                    items.add(Cloths(dat["Name"].toString(),"Shirts", dat["ShaharLikes"].toString().toInt(), dat["AdamLikes"].toString().toInt(), dat["URL"].toString()))
-                    recyclerview.adapter = adapter
-                    Log.e("List", items.toString())
-
+                    items.add(Cloths(dat["Name"].toString(),"Shirts", dat["ShaharLikes"].toString().toInt(), dat["AdamLikes"].toString().toInt(), dat["URL"].toString(), arrayListOf(dat["matching"].toString())))
+                    items.shuffle()
                 }
+            }
+            .addOnCompleteListener() {
+                recyclerview.adapter = adapter
             }
             .addOnFailureListener { exception ->
                  Log.d("Error getting documents: ", exception.toString())
@@ -184,12 +180,12 @@ class MainActivity : ComponentActivity() {
             .addOnSuccessListener { result ->
                 for (document in result) {
                     val dat = document.data
-                    items.add(Cloths(dat["Name"].toString(),"Pants", dat["ShaharLikes"].toString().toInt(), dat["AdamLikes"].toString().toInt(), dat["URL"].toString(), arrayListOf("berger,Pants,10,10,https://firebasestorage.googleapis.com/v0/b/plucky-weaver-394521.appspot.com/o/Pants%2Fberger?alt=media&token=cdeb0667-4ed3-473e-8fd5-0933364dbfd1",
-                        "Haki Cargo,Pants,9,4,https://firebasestorage.googleapis.com/v0/b/plucky-weaver-394521.appspot.com/o/Pants%2FHaki%20Cargo?alt=media&token=3e88323b-78f7-47f3-bf8e-6212b2a9ffba",
-                        "Black with Whale ,Shirts,6,10,https://firebasestorage.googleapis.com/v0/b/plucky-weaver-394521.appspot.com/o/Shirts%2FBlack%20with%20Whale%20?alt=media&token=2d4bf42e-d3d0-4cf6-92b0-d978baccaa7c",
-                        "White Stripes,Shirts,3,9,https://firebasestorage.googleapis.com/v0/b/plucky-weaver-394521.appspot.com/o/Shirts%2FWhite%20Stripes?alt=media&token=699e561c-08e0-41b5-add0-d33e314881ad")))
-                    recyclerview.adapter = adapter
+                    items.add(Cloths(dat["Name"].toString(),"Pants", dat["ShaharLikes"].toString().toInt(), dat["AdamLikes"].toString().toInt(), dat["URL"].toString(), arrayListOf(dat["matching"].toString())))
+                    items.shuffle()
                 }
+            }
+            .addOnCompleteListener() {
+                recyclerview.adapter = adapter
             }
             .addOnFailureListener { exception ->
                  Log.d("Error getting documents: ", exception.toString())

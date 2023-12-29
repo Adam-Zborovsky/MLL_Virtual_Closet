@@ -25,6 +25,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ProductDetails"> </activity>
+        <activity android:name=".MatchingDetails"> </activity>
     </application>
 
 </manifest>

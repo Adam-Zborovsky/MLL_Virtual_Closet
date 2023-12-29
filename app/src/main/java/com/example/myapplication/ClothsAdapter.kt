@@ -26,6 +26,9 @@
                 intent.putExtra("aLike", mList[holder.adapterPosition].aLike)
                 intent.putExtra("photoUrl", mList[holder.adapterPosition].photoUrl)
                 intent.putExtra("matching", mList[holder.adapterPosition].matching)
+                val fullList = arrayListOf<String>()
+                for (i in mList){fullList.add(i.toString())}
+                intent.putExtra("fullList", fullList)
                 intent.putExtra("switch", switch)
                 parent.context.startActivity(intent)
             }
@@ -42,6 +45,11 @@
 
             holder.textView1.text = "${clothsList.name}\nAdam : ${clothsList.aLike} Shahar: ${clothsList.sLike}"
         }
+
+        override fun getItemCount(): Int {
+            return mList.size
+        }
+
         fun switchFlip(){
             switch = !switch
         }
@@ -68,11 +76,6 @@
             mList = newList
             notifyDataSetChanged()
         }
-
-        override fun getItemCount(): Int {
-            return mList.size
-        }
-
         class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val imageView1: ImageView = this.itemView.findViewById(R.id.image)
             val textView1: TextView = this.itemView.findViewById(R.id.text)
