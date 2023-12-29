@@ -11,16 +11,21 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 
-class MatchingDetails : AppCompatActivity() {
+class MatchingDetails : AppCompatActivity(){
+    private var typeCloth: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.matching_details)
 
         val fullList: ArrayList<String> = intent.getStringArrayListExtra("fullList")as ArrayList<String>? ?: arrayListOf()
         val matching: ArrayList<String> = intent.getStringArrayListExtra("matching")as ArrayList<String>? ?: arrayListOf()
-
         val typeCloth = intent.getStringExtra("typeCloth")
+        val name= intent.getStringExtra("name")
+
         val containerRL = findViewById<ConstraintLayout>(R.id.containerRL)
         val recyclerview = findViewById<RecyclerView>(R.id.matching_edit)
         val openNav = findViewById<ImageButton>(R.id.openNav)
@@ -29,7 +34,7 @@ class MatchingDetails : AppCompatActivity() {
         containerRL.background = ResourcesCompat.getDrawable(resources, R.drawable.background_shahar, null)
         naviview.background = containerRL.background
 
-        val adapter = MatchingClothes(fullList,true, matching)
+        val adapter = MatchingAdapter(fullList,true, matching, name!!, typeCloth!!)
         recyclerview.layoutManager = LinearLayoutManager(this)
         recyclerview.adapter = adapter
         adapter.filterCloths(typeCloth)
@@ -55,13 +60,11 @@ class MatchingDetails : AppCompatActivity() {
                         R.id.likeS -> adapter.sortBySLike()
                         R.id.rnd -> adapter.sortRandomly()
                     }
+                    containerRL.background = ResourcesCompat.getDrawable(resources, R.drawable.background_shahar, null)
                 }
             }
             false
         }
-
-
-
 
     }
 }

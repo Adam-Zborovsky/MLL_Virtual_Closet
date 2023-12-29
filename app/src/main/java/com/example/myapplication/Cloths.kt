@@ -9,6 +9,6 @@ data class Cloths(
     val matching: ArrayList<String> = arrayListOf<String>()
     ) {
     override fun toString(): String {
-        return "$name,$typeCloth,$sLike,$aLike,$photoUrl,[${matching.toString()}]"
+        return "$name,$typeCloth,$sLike,$aLike,$photoUrl,${matching}"
     }
 }

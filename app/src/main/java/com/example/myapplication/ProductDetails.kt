@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
 class ProductDetails : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.detailed_screen)
@@ -25,7 +27,7 @@ class ProductDetails : AppCompatActivity() {
         val photoUrl = intent.getStringExtra("photoUrl")
         val matching: ArrayList<String> = intent.getStringArrayListExtra("matching")as ArrayList<String>? ?: arrayListOf()
         val fullList: ArrayList<String> = intent.getStringArrayListExtra("fullList")as ArrayList<String>? ?: arrayListOf()
-        Log.e("fullList",fullList.toString())
+
         val switch = intent.getBooleanExtra("switch", false)
 
         val containerRL = findViewById<ConstraintLayout>(R.id.containerRL)
@@ -36,7 +38,7 @@ class ProductDetails : AppCompatActivity() {
         val add = findViewById<ImageButton>(R.id.addButton)
         val recyclerview = findViewById<RecyclerView>(R.id.matching)
 
-        val adapter = MatchingClothes(matching, false, fullList)
+        val adapter = MatchingAdapter(matching, false, arrayListOf(),"","")
         recyclerview.layoutManager = LinearLayoutManager(this)
         recyclerview.adapter = adapter
 
@@ -46,8 +48,10 @@ class ProductDetails : AppCompatActivity() {
                 intent.putExtra("matching", matching)
                 intent.putExtra("fullList", fullList)
                 intent.putExtra("typeCloth", typeCloth)
+                intent.putExtra("name", name)
                 this.startActivity(intent)
             }
+            else{Toast.makeText(this,"Can't Edit In This Mode", Toast.LENGTH_SHORT).show()}
         }
 
         val backgroundResId = if (switch) {

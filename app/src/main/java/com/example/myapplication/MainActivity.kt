@@ -11,9 +11,11 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SwitchCompat
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.GravityCompat
@@ -45,17 +47,21 @@ class MainActivity : ComponentActivity() {
         val tvSwitchShahar = findViewById<TextView>(R.id.tvSwitchYes)
         val tvSwitchAdam = findViewById<TextView>(R.id.tvSwitchNo)
         var switch = false
-        containerRL.background =
-            ResourcesCompat.getDrawable(resources, R.drawable.background_adam, null)
+        var (backgroundResId, shaharTextColor, adamTextColor) =
+            Triple(R.drawable.background_adam, R.color.blue, R.color.white)
+        containerRL.background = ResourcesCompat.getDrawable(resources, backgroundResId, null)
 
         switchOnOff.setOnClickListener {
             adapter.switchFlip()
-            val (backgroundResId, shaharTextColor, adamTextColor) =
+
             if (switchOnOff.isChecked) {
-                Triple(R.drawable.background_shahar, R.color.white, R.color.blue)
-            }
-            else {
-                Triple(R.drawable.background_adam, R.color.blue, R.color.white)
+                backgroundResId = R.drawable.background_shahar
+                shaharTextColor = R.color.white
+                adamTextColor = R.color.blue
+            } else {
+                backgroundResId = R.drawable.background_adam
+                shaharTextColor = R.color.blue
+                adamTextColor = R.color.white
             }
             containerRL.background = ResourcesCompat.getDrawable(resources, backgroundResId, null)
             naviview.background = containerRL.background
@@ -106,6 +112,7 @@ class MainActivity : ComponentActivity() {
                         R.id.likeS -> adapter.sortBySLike()
                         R.id.rnd -> adapter.sortRandomly()
                     }
+                    containerRL.background = ResourcesCompat.getDrawable(resources, backgroundResId, null)
                 }
             }
             false
@@ -129,6 +136,7 @@ class MainActivity : ComponentActivity() {
             val metadata: ArrayList<Any> = arrayListOf(name.text.toString(), adamLike.text.toString(), shaharLike.text.toString() ,typeOfCloths.isChecked)
 
             if(items.none{it.name == name.text.toString()}){uploadFile(metadata)}
+            else(Toast.makeText(this,"Item With That Name Already Exists", Toast.LENGTH_SHORT).show())
         }
         builder.setNegativeButton("Cancel") { _, _ ->
             Log.d("Main", "Negative button clicked")}
@@ -148,7 +156,7 @@ class MainActivity : ComponentActivity() {
                 if (task.isSuccessful) {
                     val downloadUri = task.result
                     db.collection(folder).document(metadata[0].toString())
-                        .set(hashMapOf("Name" to metadata[0], "ShaharLikes" to metadata[2].toString().toInt(), "AdamLikes" to metadata[1].toString().toInt(), "URL" to downloadUri, "matching" to "[]"))
+                        .set(hashMapOf("Name" to metadata[0], "ShaharLikes" to metadata[2].toString().toInt(), "AdamLikes" to metadata[1].toString().toInt(), "URL" to downloadUri, "matching" to arrayListOf<String>()))
 
                         .addOnSuccessListener {Log.d(  "Upload To Database","DocumentSnapshot successfully written!")}
                         .addOnFailureListener { Log.e("Upload To Database", "Error writing document") }
@@ -165,7 +173,7 @@ class MainActivity : ComponentActivity() {
             .addOnSuccessListener { result ->
                 for (document in result) {
                     val dat = document.data
-                    items.add(Cloths(dat["Name"].toString(),"Shirts", dat["ShaharLikes"].toString().toInt(), dat["AdamLikes"].toString().toInt(), dat["URL"].toString(), arrayListOf(dat["matching"].toString())))
+                    items.add(Cloths(dat["Name"].toString(),"Shirts", dat["ShaharLikes"].toString().toInt(), dat["AdamLikes"].toString().toInt(), dat["URL"].toString(), dat["matching"] as ArrayList<String>))
                     items.shuffle()
                 }
             }
@@ -180,7 +188,7 @@ class MainActivity : ComponentActivity() {
             .addOnSuccessListener { result ->
                 for (document in result) {
                     val dat = document.data
-                    items.add(Cloths(dat["Name"].toString(),"Pants", dat["ShaharLikes"].toString().toInt(), dat["AdamLikes"].toString().toInt(), dat["URL"].toString(), arrayListOf(dat["matching"].toString())))
+                    items.add(Cloths(dat["Name"].toString(),"Pants", dat["ShaharLikes"].toString().toInt(), dat["AdamLikes"].toString().toInt(), dat["URL"].toString(), dat["matching"] as ArrayList<String>))
                     items.shuffle()
                 }
             }
