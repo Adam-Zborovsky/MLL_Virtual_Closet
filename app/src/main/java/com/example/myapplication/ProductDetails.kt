@@ -70,31 +70,32 @@ class ProductDetails : AppCompatActivity() {
                 val adamLike = dialogLayout.findViewById<EditText>(R.id.adamLike)
                 val shaharLike = dialogLayout.findViewById<EditText>(R.id.shaharLike)
                 val typeSelector = dialogLayout.findViewById<SwitchCompat>(R.id.switchCloths)
+                newName.setText(name)
+                adamLike.setText(aLike.toString())
+                shaharLike.setText(sLike.toString())
+                typeSelector.isChecked = typeCloth == "Shirts"
 
                 builder.setView(dialogLayout)
                 builder.setPositiveButton("Ok") { _, _ ->
                     Log.d("Main", "Positive button clicked")
-                    if (fullList.none { it.split(",")[0] == newName.text.toString()}) {
-                        Log.e("name" ,newName.text.toString())
-                        val updates = hashMapOf(
-                            "URL" to photoUrl,
-                            "matching" to matching
-                        )
-                        if(newName.text.toString().isNotEmpty()) {updates["Name"] = newName.text.toString()}
-                        if(adamLike.text.toString().isNotEmpty()) {updates["AdamLike"] = adamLike.text.toString().toInt()}
-                        if(shaharLike.text.toString().isNotEmpty()) {updates["ShaharLike"] = shaharLike.text.toString().toInt()}
-                        val folder = if (typeSelector.isChecked) {"Shirts"} else {"Pants" }
-                        val oldDocRef = db.collection(typeCloth.toString()).document(name.toString())
-                        val newDocRef = db.collection(folder).document(newName.text.toString())
-                        oldDocRef.delete()
-                            .addOnSuccessListener {Log.d("Firestore","Item successfully Deleted ")}
-                            .addOnFailureListener { e ->Log.w("Firestore","Error Deleteding item", e)}
-                        newDocRef.set(updates)
-                            .addOnFailureListener {Log.e("Upload To Database","Error writing document")}
-                            .addOnSuccessListener {Log.d("Firestore","Item successfully added to array!")}
-                            .addOnFailureListener { e ->Log.w("Firestore","Error adding item to array", e)}
-                    }
-                    else{Toast.makeText(this,"Item With That Name Already Exists", Toast.LENGTH_SHORT).show()}
+                    Log.e("name" ,newName.text.toString())
+                    val updates = hashMapOf(
+                        "Name" to newName.text.toString(),
+                        "AdamLike" to adamLike.text.toString().toInt(),
+                        "ShaharLike" to shaharLike.text.toString().toInt(),
+                        "URL" to photoUrl,
+                        "matching" to matching
+                    )
+                    val folder = if (typeSelector.isChecked) {"Shirts"} else {"Pants" }
+                    val oldDocRef = db.collection(typeCloth.toString()).document(name.toString())
+                    val newDocRef = db.collection(folder).document(newName.text.toString())
+                    oldDocRef.delete()
+                        .addOnSuccessListener {Log.d("Firestore","Item successfully Deleted ")}
+                        .addOnFailureListener { e ->Log.w("Firestore","Error Deleteding item", e)}
+                    newDocRef.set(updates)
+                        .addOnFailureListener {Log.e("Upload To Database","Error writing document")}
+                        .addOnSuccessListener {Log.d("Firestore","Item successfully added to array!")}
+                        .addOnFailureListener { e ->Log.w("Firestore","Error adding item to array", e)}
                 }
                 builder.setNegativeButton("Cancel") { _, _ ->
                     Log.d("Main", "Negative button clicked")}

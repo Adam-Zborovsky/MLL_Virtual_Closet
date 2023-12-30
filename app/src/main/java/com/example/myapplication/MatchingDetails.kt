@@ -11,11 +11,8 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.firestore
 
 class MatchingDetails : AppCompatActivity(){
-    private var typeCloth: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +31,7 @@ class MatchingDetails : AppCompatActivity(){
         containerRL.background = ResourcesCompat.getDrawable(resources, R.drawable.background_shahar, null)
         naviview.background = containerRL.background
 
-        val adapter = MatchingAdapter(fullList,true, matching, name!!, typeCloth!!)
+        val adapter = MatchingAdapter(fullList,true, matching, name.toString(), typeCloth.toString())
         Log.e("fullList",fullList.toString())
         Log.e("matching",matching.toString())
         recyclerview.layoutManager = LinearLayoutManager(this)
