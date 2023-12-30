@@ -223,7 +223,14 @@ class MainActivity : ComponentActivity() {
             .addOnSuccessListener { result ->
                 for (document in result) {
                     val dat = document.data
-                    items.add(Cloths(dat["Name"].toString(),"Pants", dat["ShaharLikes"].toString().toInt(), dat["AdamLikes"].toString().toInt(), dat["URL"].toString(), dat["matching"] as ArrayList<String>))
+                    items.add(Cloths(
+                        dat["Name"].toString(),
+                        "Pants",
+                        dat["ShaharLikes"]?.toString()?.toIntOrNull() ?: 0, // Safe conversion with default value
+                        dat["AdamLikes"]?.toString()?.toIntOrNull() ?: 0, // Safe conversion with default value
+                        dat["URL"].toString(),
+                        dat["matching"] as ArrayList<String>
+                    ))
                     items.shuffle()
                 }
             }
