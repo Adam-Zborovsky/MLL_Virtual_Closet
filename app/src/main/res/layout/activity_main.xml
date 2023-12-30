@@ -30,28 +30,45 @@
 
             </androidx.recyclerview.widget.RecyclerView>
 
-            <ImageButton
-                android:id="@+id/openNav"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/ic_menu"
-                android:contentDescription="open nav"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="TouchTargetSizeCheck" />
-            <ImageButton
-                android:id="@+id/refresh"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_marginStart="350dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/ic_refresh"
-                android:contentDescription="refresh"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="TouchTargetSizeCheck" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageButton
+                    android:id="@+id/openNav"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/ic_menu"
+                    android:contentDescription="open nav"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_gravity="center"
+                    android:paddingEnd="80dp"
+                    android:paddingStart="70dp"
+                    android:text="MLL Virtual Closet"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+
+                <ImageButton
+                    android:id="@+id/refresh"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginTop="9dp"
+                    android:background="@drawable/ic_refresh"
+                    android:contentDescription="refresh"
+                    tools:ignore="TouchTargetSizeCheck" />
+            </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="125dp"
