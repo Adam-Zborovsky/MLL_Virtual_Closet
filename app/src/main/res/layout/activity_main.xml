@@ -32,12 +32,23 @@
 
             <ImageButton
                 android:id="@+id/openNav"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/ic_menu"
                 android:contentDescription="open nav"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="TouchTargetSizeCheck" />
+            <ImageButton
+                android:id="@+id/refresh"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="350dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/ic_refresh"
+                android:contentDescription="refresh"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="TouchTargetSizeCheck" />

@@ -33,8 +33,8 @@ class MainActivity : ComponentActivity() {
     private var storageRef = Firebase.storage.reference
     private var db = Firebase.firestore
     private var uri: Uri? = null
-    private val items = ArrayList<Cloths>()
-    private val adapter = ClothsAdapter(items)
+    private var items = ArrayList<Cloths>()
+    private var adapter = ClothsAdapter(items)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -118,7 +118,18 @@ class MainActivity : ComponentActivity() {
             false
         }
 
-
+        val refresh = findViewById<ImageButton>(R.id.refresh)
+        refresh.setOnClickListener {
+            downFromDatabase()
+            items = arrayListOf()
+            adapter = ClothsAdapter(items)
+            switchOnOff.isChecked = false
+            switch = false
+            containerRL.background = ResourcesCompat.getDrawable(resources, R.drawable.background_adam, null)
+            naviview.background = containerRL.background
+            tvSwitchShahar.setTextColor(ContextCompat.getColor(this, R.color.blue))
+            tvSwitchAdam.setTextColor(ContextCompat.getColor(this, R.color.white))
+        }
     }
 
     private fun metaOfFile(){
@@ -133,17 +144,24 @@ class MainActivity : ComponentActivity() {
         builder.setView(dialogLayout)
         builder.setPositiveButton("Ok") { _, _ ->
             Log.d("Main", "Positive button clicked")
-            val metadata: ArrayList<Any> = arrayListOf(name.text.toString(), adamLike.text.toString(), shaharLike.text.toString() ,typeOfCloths.isChecked)
+            val metadata: ArrayList<Any> = arrayListOf(
+                name.text.toString(),
+                adamLike.text.toString(),
+                shaharLike.text.toString(),
+                typeOfCloths.isChecked
+            )
 
-            if(items.none{it.name == name.text.toString()}){uploadFile(metadata)}
-            else(Toast.makeText(this,"Item With That Name Already Exists", Toast.LENGTH_SHORT).show())
-        }
+
+        if (items.none { it.name == name.text.toString() }) {uploadFile(metadata)}
+        else(Toast.makeText(this,"Item With That Name Already Exists", Toast.LENGTH_SHORT).show())}
         builder.setNegativeButton("Cancel") { _, _ ->
             Log.d("Main", "Negative button clicked")}
         builder.show()
     }
 
     private fun uploadFile(metadata: ArrayList<Any>) {
+        val recyclerview = findViewById<RecyclerView>(R.id.recyclerView)
+        recyclerview.layoutManager = GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
         if (uri != null) {
             val folder = if (metadata[3] as Boolean){"Shirts"} else{"Pants"}
             val ref = storageRef.child(folder +"/"+ metadata[0].toString())
@@ -156,9 +174,18 @@ class MainActivity : ComponentActivity() {
                 if (task.isSuccessful) {
                     val downloadUri = task.result
                     db.collection(folder).document(metadata[0].toString())
-                        .set(hashMapOf("Name" to metadata[0], "ShaharLikes" to metadata[2].toString().toInt(), "AdamLikes" to metadata[1].toString().toInt(), "URL" to downloadUri, "matching" to arrayListOf<String>()))
+                        .set(hashMapOf(
+                            "Name" to metadata[0],
+                            "ShaharLikes" to metadata[2].toString().toInt(),
+                            "AdamLikes" to metadata[1].toString().toInt(),
+                            "URL" to downloadUri,
+                            "matching" to arrayListOf<String>()))
 
-                        .addOnSuccessListener {Log.d(  "Upload To Database","DocumentSnapshot successfully written!")}
+                        .addOnSuccessListener {Log.d(  "Upload To Database","DocumentSnapshot successfully written!")
+                        downFromDatabase()
+                            items = arrayListOf()
+                        adapter = ClothsAdapter(items)
+                        }
                         .addOnFailureListener { Log.e("Upload To Database", "Error writing document") }
                 }
             }
@@ -173,7 +200,15 @@ class MainActivity : ComponentActivity() {
             .addOnSuccessListener { result ->
                 for (document in result) {
                     val dat = document.data
-                    items.add(Cloths(dat["Name"].toString(),"Shirts", dat["ShaharLikes"].toString().toInt(), dat["AdamLikes"].toString().toInt(), dat["URL"].toString(), dat["matching"] as ArrayList<String>))
+                    items.add(Cloths(
+                        dat["Name"].toString(),
+                        "Shirts",
+                        dat["ShaharLikes"]?.toString()?.toIntOrNull() ?: 0, // Safe conversion with default value
+                        dat["AdamLikes"]?.toString()?.toIntOrNull() ?: 0, // Safe conversion with default value
+                        dat["URL"].toString(),
+                        dat["matching"] as ArrayList<String>
+                    ))
+                    Log.e("items",items.toString())
                     items.shuffle()
                 }
             }

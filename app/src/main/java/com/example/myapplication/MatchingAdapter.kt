@@ -25,7 +25,9 @@ class MatchingAdapter(private var mList: ArrayList<String>, private var switch: 
         return ViewHolder(view)
     }
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val clothsList = mList[position].split(",")
+        var clothsList = mList[position].split(", ")
+        if (clothsList.size <= 1){clothsList = mList[position].split(",")}
+
         Log.e("clothsList",clothsList.toString())
 
         Glide.with(holder.itemView.context)
@@ -35,13 +37,14 @@ class MatchingAdapter(private var mList: ArrayList<String>, private var switch: 
 
         holder.details.text = "${clothsList[0]}\nAdam : ${clothsList[3]} Shahar: ${clothsList[2]}"
 
-//        if (switch) {
-//            holder.addBox.isChecked = oldMatching.none { it.split(',')[0] != clothsList[0] }
-//
-//            holder.addBox.setOnCheckedChangeListener { _, isChecked ->
-//                uploadMatching(clothsList, isChecked)
-//            }
-//        }
+        if (switch) {
+            if (oldMatching.isNotEmpty()){
+            holder.addBox.isChecked = oldMatching.none { it.split(",")[0] != clothsList[0] }}
+
+            holder.addBox.setOnCheckedChangeListener { _, isChecked ->
+                uploadMatching(clothsList, isChecked)
+            }
+        }
     }
 
 

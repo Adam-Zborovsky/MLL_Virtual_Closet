@@ -35,6 +35,8 @@ class MatchingDetails : AppCompatActivity(){
         naviview.background = containerRL.background
 
         val adapter = MatchingAdapter(fullList,true, matching, name!!, typeCloth!!)
+        Log.e("fullList",fullList.toString())
+        Log.e("matching",matching.toString())
         recyclerview.layoutManager = LinearLayoutManager(this)
         recyclerview.adapter = adapter
         adapter.filterCloths(typeCloth)
