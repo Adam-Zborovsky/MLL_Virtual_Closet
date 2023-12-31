@@ -2,12 +2,17 @@ This Is a demo Connected to my Firebase for this to work on your phone follow th
 
 1. Create a Firebase account
 
-2. Activate Storage and Firestore modules
+2. Create a new Firebase project
 
-3. Download the project as zip
+3. Follow The instructions on screen 
 
-4. Open in Android Studio (or another way of connecting the Firebase to your project)
+4. Download the project as zip
 
-5. Connect the account to the project
+5. Open in Android Studio (or another way of connecting the Firebase to your project)
 
-6. Build the APK
+6. Connect the account to the project
+
+7. Activate Storage and Firestore modules
+
+8. Build the APK
+
