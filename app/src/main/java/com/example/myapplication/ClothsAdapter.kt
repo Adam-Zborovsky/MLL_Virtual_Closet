@@ -42,7 +42,7 @@
                 .centerCrop()
                 .into(holder.imageView1)
 
-            holder.textView1.text = "${clothsList.name}\nView User : ${clothsList.aLike} Edit User: ${clothsList.sLike}"
+            holder.textView1.text = "${clothsList.name}\nAdam : ${clothsList.aLike} Shahar: ${clothsList.sLike}"
         }
 
         override fun getItemCount(): Int {

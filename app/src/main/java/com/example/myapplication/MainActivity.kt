@@ -175,8 +175,8 @@ class MainActivity : ComponentActivity() {
                     db.collection(folder).document(metadata[0].toString())
                         .set(hashMapOf(
                             "Name" to metadata[0],
-                            "ShaharLike" to metadata[2].toString().toInt(),
-                            "AdamLike" to metadata[1].toString().toInt(),
+                            "ShaharLikes" to metadata[2].toString().toInt(),
+                            "AdamLikes" to metadata[1].toString().toInt(),
                             "URL" to downloadUri,
                             "matching" to arrayListOf<String>()))
 
@@ -202,8 +202,8 @@ class MainActivity : ComponentActivity() {
                     items.add(Cloths(
                         dat["Name"].toString(),
                         "Shirts",
-                        dat["ShaharLike"].toString().toInt(),
-                        dat["AdamLike"].toString().toInt(),
+                        dat["ShaharLikes"]?.toString()?.toIntOrNull() ?: 0, // Safe conversion with default value
+                        dat["AdamLikes"]?.toString()?.toIntOrNull() ?: 0, // Safe conversion with default value
                         dat["URL"].toString(),
                         dat["matching"] as ArrayList<String>
                     ))
@@ -225,8 +225,8 @@ class MainActivity : ComponentActivity() {
                     items.add(Cloths(
                         dat["Name"].toString(),
                         "Pants",
-                        dat["ShaharLike"].toString().toInt(),
-                        dat["AdamLike"].toString().toInt(),
+                        dat["ShaharLikes"]?.toString()?.toIntOrNull() ?: 0, // Safe conversion with default value
+                        dat["AdamLikes"]?.toString()?.toIntOrNull() ?: 0, // Safe conversion with default value
                         dat["URL"].toString(),
                         dat["matching"] as ArrayList<String>
                     ))

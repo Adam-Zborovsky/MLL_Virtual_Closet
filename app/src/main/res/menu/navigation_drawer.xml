@@ -36,14 +36,14 @@
                     android:id="@+id/likeA"
                     android:checked="false"
                     android:icon="@drawable/like"
-                    android:title="View User Likes"
+                    android:title="Adam Likes"
                     android:checkable="true"/>
 
                 <item
                     android:id="@+id/likeS"
                     android:checked="false"
                     android:icon="@drawable/like"
-                    android:title="Edit User Likes"
+                    android:title="Shahar Likes"
                     android:checkable="true"/>
                 <item
                     android:id="@+id/rnd"
