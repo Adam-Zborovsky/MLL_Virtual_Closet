@@ -10,7 +10,7 @@
         android:layout_width="325dp"
         android:layout_height="130dp"
         android:layout_marginStart="2dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="7dp"
         android:src="@drawable/banner"
         android:contentDescription="banner" />
 
