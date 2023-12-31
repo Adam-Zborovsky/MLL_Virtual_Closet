@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import com.google.firebase.storage.FirebaseStorage
 
 class ProductDetails : AppCompatActivity() {
     private var db = Firebase.firestore
@@ -65,6 +66,7 @@ class ProductDetails : AppCompatActivity() {
 
                 val builder = AlertDialog.Builder(this)
                 val inflater: LayoutInflater = layoutInflater
+                val oldDocRef = db.collection(typeCloth.toString()).document(name.toString())
                 val dialogLayout = inflater.inflate(R.layout.upload_dialog_box, null)
                 val newName = dialogLayout.findViewById<EditText>(R.id.name)
                 val adamLike = dialogLayout.findViewById<EditText>(R.id.adamLike)
@@ -76,6 +78,19 @@ class ProductDetails : AppCompatActivity() {
                 typeSelector.isChecked = typeCloth == "Shirts"
 
                 builder.setView(dialogLayout)
+                builder.setNeutralButton("Delete"){_, _ ->
+                    Log.d("Main", "Delete button clicked")
+                    oldDocRef.delete()
+                        .addOnSuccessListener {Log.d("Firestore","Item successfully Deleted ")}
+                        .addOnFailureListener { e ->Log.w("Firestore","Error Deleteding item", e)}
+
+                    val fileRefByUrl = FirebaseStorage.getInstance().getReferenceFromUrl(photoUrl.toString())
+                    fileRefByUrl.delete().addOnSuccessListener {
+                        Log.d("FirebaseStorage", "File deleted successfully")
+                    }.addOnFailureListener {
+                        Log.d("FirebaseStorage", "Error deleting file", it)
+                    }
+                }
                 builder.setPositiveButton("Ok") { _, _ ->
                     Log.d("Main", "Positive button clicked")
                     Log.e("name" ,newName.text.toString())
@@ -87,7 +102,6 @@ class ProductDetails : AppCompatActivity() {
                         "matching" to matching
                     )
                     val folder = if (typeSelector.isChecked) {"Shirts"} else {"Pants" }
-                    val oldDocRef = db.collection(typeCloth.toString()).document(name.toString())
                     val newDocRef = db.collection(folder).document(newName.text.toString())
                     oldDocRef.delete()
                         .addOnSuccessListener {Log.d("Firestore","Item successfully Deleted ")}
