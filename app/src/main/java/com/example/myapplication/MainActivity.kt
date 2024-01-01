@@ -44,6 +44,7 @@ class MainActivity : ComponentActivity() {
         val switchOnOff = findViewById<SwitchCompat>(R.id.switchOnOff)
         val containerRL = findViewById<RelativeLayout>(R.id.idRLContainer)
         val tvSwitchShahar = findViewById<TextView>(R.id.tvSwitchYes)
+        val refresh = findViewById<ImageButton>(R.id.refresh)
         val tvSwitchAdam = findViewById<TextView>(R.id.tvSwitchNo)
         var switch = false
         var (backgroundResId, shaharTextColor, adamTextColor) =
@@ -116,7 +117,7 @@ class MainActivity : ComponentActivity() {
             false
         }
 
-        val refresh = findViewById<ImageButton>(R.id.refresh)
+
         refresh.setOnClickListener {
             downFromDatabase()
             items = arrayListOf()

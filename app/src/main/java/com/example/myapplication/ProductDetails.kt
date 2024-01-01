@@ -123,6 +123,12 @@ class ProductDetails : AppCompatActivity() {
                 R.drawable.background_adam}
         containerRL.background = ResourcesCompat.getDrawable(resources, backgroundResId, null)
 
+        val btnReturnHome = findViewById<ImageButton>(R.id.btnReturnHome)
+        btnReturnHome.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
         Glide.with(this)
             .asDrawable()
             .load(photoUrl)

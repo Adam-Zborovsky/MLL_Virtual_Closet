@@ -25,10 +25,9 @@ class MatchingAdapter(private var mList: ArrayList<String>, private var switch: 
         return ViewHolder(view)
     }
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        var clothsList = mList[position].split(", ")
-        if (clothsList.size <= 1){clothsList = mList[position].split(",")}
+        val clothsList = mList[position].split(",").map { it.trim() }
+        Log.e("clothlist",clothsList.toString())
 
-        Log.e("clothsList",clothsList.toString())
 
         Glide.with(holder.itemView.context)
             .asDrawable()
@@ -55,6 +54,7 @@ class MatchingAdapter(private var mList: ArrayList<String>, private var switch: 
 
         var itemToModify = clothsList.toString()
         itemToModify = itemToModify.substring(1, itemToModify.length - 1)
+//        Log.e("ClotList",clothsList.toString())
 
         if (isChecked) {
             Log.e("Firestore", "Add Item")

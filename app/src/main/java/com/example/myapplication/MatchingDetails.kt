@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageButton
@@ -32,8 +33,6 @@ class MatchingDetails : AppCompatActivity(){
         naviview.background = containerRL.background
 
         val adapter = MatchingAdapter(fullList,true, matching, name.toString(), typeCloth.toString())
-        Log.e("fullList",fullList.toString())
-        Log.e("matching",matching.toString())
         recyclerview.layoutManager = LinearLayoutManager(this)
         recyclerview.adapter = adapter
         adapter.filterCloths(typeCloth)
@@ -65,5 +64,10 @@ class MatchingDetails : AppCompatActivity(){
             false
         }
 
+        val done = findViewById<ImageButton>(R.id.done)
+        done.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
