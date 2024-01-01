@@ -93,11 +93,10 @@ class ProductDetails : AppCompatActivity() {
                 }
                 builder.setPositiveButton("Ok") { _, _ ->
                     Log.d("Main", "Positive button clicked")
-                    Log.e("name" ,newName.text.toString())
                     val updates = hashMapOf(
                         "Name" to newName.text.toString(),
-                        "AdamLike" to adamLike.text.toString().toInt(),
-                        "ShaharLike" to shaharLike.text.toString().toInt(),
+                        "AdamLikes" to adamLike.text.toString().toInt(),
+                        "ShaharLikes" to shaharLike.text.toString().toInt(),
                         "URL" to photoUrl,
                         "matching" to matching
                     )

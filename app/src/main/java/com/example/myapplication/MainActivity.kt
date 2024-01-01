@@ -82,7 +82,6 @@ class MainActivity : ComponentActivity() {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 val data = it.data
                 val imgUri = data?.data
-                Log.i("Uri",imgUri.toString())
                 if (imgUri != null){uri = imgUri}
             }
         uploadButton.setOnClickListener {
@@ -207,7 +206,6 @@ class MainActivity : ComponentActivity() {
                         dat["URL"].toString(),
                         dat["matching"] as ArrayList<String>
                     ))
-                    Log.e("items",items.toString())
                     items.shuffle()
                 }
             }
