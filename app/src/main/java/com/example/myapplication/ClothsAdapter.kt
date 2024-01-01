@@ -40,9 +40,10 @@
                 .asDrawable()
                 .load(clothsList.photoUrl)
                 .centerCrop()
-                .into(holder.imageView1)
+                .into(holder.image)
 
-            holder.textView1.text = "${clothsList.name}\nView User : ${clothsList.aLike} Edit User: ${clothsList.sLike}"
+            holder.name.text = clothsList.name
+            holder.likes.text = "View User : ${clothsList.aLike} Edit User: ${clothsList.sLike}"
         }
 
         override fun getItemCount(): Int {
@@ -76,7 +77,8 @@
             notifyDataSetChanged()
         }
         class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            val imageView1: ImageView = this.itemView.findViewById(R.id.image)
-            val textView1: TextView = this.itemView.findViewById(R.id.text)
+            val image: ImageView = this.itemView.findViewById(R.id.image)
+            val name: TextView = this.itemView.findViewById(R.id.name)
+            val likes: TextView = this.itemView.findViewById(R.id.likes)
         }
     }

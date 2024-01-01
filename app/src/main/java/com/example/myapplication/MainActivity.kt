@@ -44,6 +44,7 @@ class MainActivity : ComponentActivity() {
         val switchOnOff = findViewById<SwitchCompat>(R.id.switchOnOff)
         val containerRL = findViewById<RelativeLayout>(R.id.idRLContainer)
         val tvSwitchShahar = findViewById<TextView>(R.id.tvSwitchYes)
+        val refresh = findViewById<ImageButton>(R.id.refresh)
         val tvSwitchAdam = findViewById<TextView>(R.id.tvSwitchNo)
         var switch = false
         var (backgroundResId, shaharTextColor, adamTextColor) =
@@ -117,7 +118,7 @@ class MainActivity : ComponentActivity() {
             false
         }
 
-        val refresh = findViewById<ImageButton>(R.id.refresh)
+
         refresh.setOnClickListener {
             downFromDatabase()
             items = arrayListOf()
@@ -175,8 +176,8 @@ class MainActivity : ComponentActivity() {
                     db.collection(folder).document(metadata[0].toString())
                         .set(hashMapOf(
                             "Name" to metadata[0],
-                            "ShaharLike" to metadata[2].toString().toInt(),
-                            "AdamLike" to metadata[1].toString().toInt(),
+                            "ShaharLikes" to metadata[2].toString().toInt(),
+                            "AdamLikes" to metadata[1].toString().toInt(),
                             "URL" to downloadUri,
                             "matching" to arrayListOf<String>()))
 
@@ -202,8 +203,8 @@ class MainActivity : ComponentActivity() {
                     items.add(Cloths(
                         dat["Name"].toString(),
                         "Shirts",
-                        dat["ShaharLike"].toString().toInt(),
-                        dat["AdamLike"].toString().toInt(),
+                        dat["ShaharLikes"].toString().toInt(),
+                        dat["AdamLikes"].toString().toInt(),
                         dat["URL"].toString(),
                         dat["matching"] as ArrayList<String>
                     ))
@@ -225,8 +226,8 @@ class MainActivity : ComponentActivity() {
                     items.add(Cloths(
                         dat["Name"].toString(),
                         "Pants",
-                        dat["ShaharLike"].toString().toInt(),
-                        dat["AdamLike"].toString().toInt(),
+                        dat["ShaharLikes"].toString().toInt(),
+                        dat["AdamLikes"].toString().toInt(),
                         dat["URL"].toString(),
                         dat["matching"] as ArrayList<String>
                     ))

@@ -95,8 +95,8 @@ class ProductDetails : AppCompatActivity() {
                     Log.d("Main", "Positive button clicked")
                     val updates = hashMapOf(
                         "Name" to newName.text.toString(),
-                        "AdamLike" to adamLike.text.toString().toInt(),
-                        "ShaharLike" to shaharLike.text.toString().toInt(),
+                        "AdamLikes" to adamLike.text.toString().toInt(),
+                        "ShaharLikes" to shaharLike.text.toString().toInt(),
                         "URL" to photoUrl,
                         "matching" to matching
                     )
@@ -122,6 +122,12 @@ class ProductDetails : AppCompatActivity() {
             } else {
                 R.drawable.background_adam}
         containerRL.background = ResourcesCompat.getDrawable(resources, backgroundResId, null)
+
+        val btnReturnHome = findViewById<ImageButton>(R.id.btnReturnHome)
+        btnReturnHome.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
 
         Glide.with(this)
             .asDrawable()
