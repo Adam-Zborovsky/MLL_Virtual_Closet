@@ -135,7 +135,7 @@ class ProductDetails : AppCompatActivity() {
             .centerCrop()
             .into(prod)
         prodName.text = name
-        like.text = "Adam: $aLike          Shahar: $sLike"
+        like.text = "View User: $aLike          Edit User: $sLike"
 
     }
 }
