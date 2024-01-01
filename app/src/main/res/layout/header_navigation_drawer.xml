@@ -21,7 +21,7 @@
         android:layout_marginTop="5dp"
         android:textColor="@color/black"
         android:textAppearance="@style/Headline.header"
-        android:text="MLL Virtual Closet" />
+        android:text="M.L.L Virtual Closet" />
 
 
 </LinearLayout>
