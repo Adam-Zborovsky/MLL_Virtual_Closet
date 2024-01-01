@@ -43,7 +43,7 @@
                 .into(holder.image)
 
             holder.name.text = clothsList.name
-            holder.likes.text = "View User : ${clothsList.aLike} Edit User: ${clothsList.sLike}"
+            holder.likes.text = "Adam: ${clothsList.aLike}   Shahar: ${clothsList.sLike}"
         }
 
         override fun getItemCount(): Int {
