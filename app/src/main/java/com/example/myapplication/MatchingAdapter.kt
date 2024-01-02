@@ -37,11 +37,9 @@ class MatchingAdapter(private var mList: ArrayList<String>, private var switch: 
         holder.details.text = "${clothsList[0]}\nAdam : ${clothsList[3]}\nShahar: ${clothsList[2]}"
 
         if (switch) {
-            if (oldMatching.isNotEmpty()) {
-                for (i in oldMatching) {
-                    if (i.split(",")[0] == clothsList[0]) {
-                        holder.addBox.isChecked = oldMatching.none { it.split(",")[0] != clothsList[0] }}
-                }
+            for (i in oldMatching) {
+                if (i.split(",")[0] == clothsList[0]) {
+                    holder.addBox.isChecked = oldMatching.none { it.split(",")[0] != clothsList[0] }}
             }
             holder.addBox.setOnCheckedChangeListener { _, isChecked ->
                 uploadMatching(clothsList, isChecked)
