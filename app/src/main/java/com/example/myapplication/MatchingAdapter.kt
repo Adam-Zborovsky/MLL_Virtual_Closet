@@ -34,7 +34,7 @@ class MatchingAdapter(private var mList: ArrayList<String>, private var switch: 
             .load(clothsList[4])
             .into(holder.prodImage)
 
-        holder.details.text = "${clothsList[0]}\nAdam : ${clothsList[3]} Shahar: ${clothsList[2]}"
+        holder.details.text = "${clothsList[0]}\nAdam : ${clothsList[3]}\nShahar: ${clothsList[2]}"
 
         if (switch) {
             if (oldMatching.isNotEmpty()){
