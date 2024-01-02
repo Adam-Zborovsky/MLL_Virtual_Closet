@@ -39,7 +39,7 @@ class MatchingAdapter(private var mList: ArrayList<String>, private var switch: 
         if (switch) {
             for (i in oldMatching) {
                 if (i.split(",")[0] == clothsList[0]) {
-                    holder.addBox.isChecked = oldMatching.none { it.split(",")[0] != clothsList[0] }}
+                    holder.addBox.isChecked = true}
             }
 
             holder.addBox.setOnCheckedChangeListener { _, isChecked ->
