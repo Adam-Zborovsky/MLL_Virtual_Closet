@@ -24,7 +24,9 @@
                 intent.putExtra("sLike", mList[holder.adapterPosition].sLike)
                 intent.putExtra("aLike", mList[holder.adapterPosition].aLike)
                 intent.putExtra("photoUrl", mList[holder.adapterPosition].photoUrl)
-                intent.putExtra("matching", mList[holder.adapterPosition].matching)
+                val matching =  mList[holder.adapterPosition].matching
+                Log.e("Matching",matching.map { it.trim() }.toString())
+                intent.putExtra("matching", ArrayList(matching))
                 val fullList = arrayListOf<String>()
                 for (i in mList){fullList.add(i.toString())}
                 intent.putExtra("fullList", fullList)
