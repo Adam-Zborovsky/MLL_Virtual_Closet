@@ -26,7 +26,6 @@ class MatchingAdapter(private var mList: ArrayList<String>, private var switch: 
     }
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val clothsList = mList[position].split(",").map { it.trim() }
-        Log.e("clothlist",clothsList.toString())
 
 
         Glide.with(holder.itemView.context)
