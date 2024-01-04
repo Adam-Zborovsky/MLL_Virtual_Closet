@@ -30,10 +30,10 @@
 
             </androidx.recyclerview.widget.RecyclerView>
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginTop="15dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -41,34 +41,30 @@
                     android:id="@+id/openNav"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_gravity="center"
+                    android:layout_marginStart="25dp"
                     android:background="@drawable/ic_menu"
                     android:contentDescription="open nav"
                     tools:ignore="TouchTargetSizeCheck" />
 
                 <TextView
-                    android:id="@+id/textView"
+                    android:id="@+id/appName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
                     android:layout_gravity="center"
-                    android:paddingEnd="80dp"
-                    android:paddingStart="70dp"
                     android:text="M.L.L Virtual Closet"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
 
                 <ImageButton
                     android:id="@+id/refresh"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_marginTop="9dp"
-                    android:background="@drawable/ic_refresh"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="25dp"
+                    android:layout_gravity="end"
+                    android:background="@drawable/ic_shopping_cart"
                     android:contentDescription="refresh"
                     tools:ignore="TouchTargetSizeCheck" />
-            </LinearLayout>
+            </FrameLayout>
 
             <RelativeLayout
                 android:layout_width="125dp"

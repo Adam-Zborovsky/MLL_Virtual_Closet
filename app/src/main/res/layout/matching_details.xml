@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout xmlns:tools="http://schemas.android.com/tools"
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawerLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -9,29 +10,33 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/containerRL"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="25dp">
+        android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/matching_edit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_marginTop="50dp"
+            app:layout_constraintBottom_toBottomOf="@id/containerRL"
+            app:layout_constraintEnd_toEndOf="@id/containerRL" />
 
         <ImageButton
             android:id="@+id/openNav"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="25dp"
             android:background="@drawable/ic_menu"
             android:contentDescription="Menu"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"  />
+            app:layout_constraintStart_toStartOf="@id/containerRL"
+            app:layout_constraintTop_toTopOf="@id/containerRL" />
 
         <ImageButton
             android:id="@+id/done"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="25dp"
             android:background="@drawable/ic_done"
             android:contentDescription="done editing"
             app:layout_constraintEnd_toEndOf="parent"
