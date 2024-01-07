@@ -24,8 +24,8 @@
             android:id="@+id/openNav"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="30dp"
             android:background="@drawable/ic_menu"
             android:contentDescription="Menu"
             app:layout_constraintStart_toStartOf="@id/containerRL"
@@ -35,12 +35,12 @@
             android:id="@+id/done"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="30dp"
             android:background="@drawable/ic_done"
             android:contentDescription="done editing"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintEnd_toEndOf="@id/containerRL"
+            app:layout_constraintBottom_toBottomOf="@id/containerRL"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView

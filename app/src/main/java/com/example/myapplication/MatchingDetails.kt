@@ -2,7 +2,6 @@ package com.example.myapplication
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -32,7 +31,7 @@ class MatchingDetails : AppCompatActivity(){
         containerRL.background = ResourcesCompat.getDrawable(resources, R.drawable.background_shahar, null)
         naviview.background = containerRL.background
 
-        val adapter = MatchingAdapter(fullList,true, matching, name.toString(), typeCloth.toString())
+        val adapter = EditMatchingAdapter(fullList, matching, name.toString(), typeCloth.toString())
         recyclerview.layoutManager = LinearLayoutManager(this)
         recyclerview.adapter = adapter
         adapter.filterCloths(typeCloth)

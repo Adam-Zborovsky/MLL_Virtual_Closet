@@ -15,7 +15,7 @@
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.view_design, parent, false)
+                .inflate(R.layout.cloth_adapter, parent, false)
             val holder = ViewHolder(view)
             view.setOnClickListener{
                 val intent = Intent(parent.context, ProductDetails::class.java)

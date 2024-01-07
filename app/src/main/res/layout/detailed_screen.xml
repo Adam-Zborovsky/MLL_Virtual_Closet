@@ -64,13 +64,11 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
-    <RelativeLayout
-        android:id="@+id/relativeLayout"
-        android:layout_width="330dp"
+    <FrameLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginEnd="30dp"
-        android:layout_marginStart="30dp"
+        android:layout_margin="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -87,8 +85,8 @@
             android:id="@+id/editButton"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginTop="18dp"
-            android:layout_marginStart="290dp"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="end"
             android:background="@drawable/ic_edit"
             android:contentDescription="Edit" />
 
@@ -97,9 +95,9 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginTop="775dp"
-            android:layout_marginStart="290dp"
+            android:layout_gravity="end"
             android:background="@drawable/ic_add"
             android:contentDescription="Add" />
 
-    </RelativeLayout>
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -46,7 +46,7 @@ class ProductDetails : AppCompatActivity() {
         val add = findViewById<ImageButton>(R.id.addButton)
         val recyclerview = findViewById<RecyclerView>(R.id.matching)
 
-        val adapter = MatchingAdapter(matching, false, arrayListOf(),"","")
+        val adapter = MatchingAdapter(matching)
         recyclerview.layoutManager = LinearLayoutManager(this)
         recyclerview.adapter = adapter
 

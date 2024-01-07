@@ -14,24 +14,23 @@ import com.bumptech.glide.Glide
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 
-class MatchingAdapter(private var mList: ArrayList<String>, private var switch: Boolean, private var oldMatching: ArrayList<String>, private var parentName :String, private var parentType :String)  : RecyclerView.Adapter<MatchingAdapter.ViewHolder>() {
+class EditMatchingAdapter(private var fullMatching: ArrayList<String>, private var oldMatching: ArrayList<String>, private var parentName :String, private var parentType :String)  : RecyclerView.Adapter<EditMatchingAdapter.ViewHolder>() {
     private var db = Firebase.firestore
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.matching, parent, false)
+            .inflate(R.layout.edit_matrching_adapter, parent, false)
         val holder = ViewHolder(view)
 
         val add = view.findViewById<CheckBox>(R.id.addBox)
-        if (switch){add.visibility = View.VISIBLE}
+        add.visibility = View.VISIBLE
         val prodImage = view.findViewById<ImageButton>(R.id.prodImage)
-        prodImage.setOnClickListener { bigPicture(mList[holder.adapterPosition], view) }
+        prodImage.setOnClickListener { bigPicture(fullMatching[holder.adapterPosition], view) }
 
         return holder
     }
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val clothsList = mList[position].split(",").map { it.trim() }
-
+        val clothsList = fullMatching[position].split(",").map { it.trim() }
 
         Glide.with(holder.itemView.context)
             .asDrawable()
@@ -40,15 +39,13 @@ class MatchingAdapter(private var mList: ArrayList<String>, private var switch: 
 
         holder.details.text = "${clothsList[0]}\nView User: ${clothsList[3]}\nEdit User: ${clothsList[2]}"
 
-        if (switch) {
-            for (i in oldMatching) {
-                if (i.split(",")[0] == clothsList[0]) {
-                    holder.addBox.isChecked = true}
-            }
+        for (i in oldMatching) {
+            if (i.split(",")[0] == clothsList[0]) {
+                holder.addBox.isChecked = true}
+        }
 
-            holder.addBox.setOnCheckedChangeListener { _, isChecked ->
-                uploadMatching(clothsList, isChecked)
-            }
+        holder.addBox.setOnCheckedChangeListener { _, isChecked ->
+            uploadMatching(clothsList, isChecked)
         }
     }
 
@@ -93,26 +90,26 @@ class MatchingAdapter(private var mList: ArrayList<String>, private var switch: 
         }
     }
     override fun getItemCount(): Int {
-        return mList.size
+        return fullMatching.size
     }
     fun sortByALike() {
-        val sortedList = ArrayList(mList.sortedByDescending { it.split(',')[3].toInt()})
+        val sortedList = ArrayList(fullMatching.sortedByDescending { it.split(',')[3].toInt()})
         updateList(sortedList)
     }
     fun sortBySLike() {
-        val sortedList = ArrayList(mList.sortedByDescending { it.split(',')[2].toInt()})
+        val sortedList = ArrayList(fullMatching.sortedByDescending { it.split(',')[2].toInt()})
         updateList(sortedList)
     }
     fun sortRandomly() {
-        mList = ArrayList(mList.shuffled())
-        updateList(mList)
+        fullMatching = ArrayList(fullMatching.shuffled())
+        updateList(fullMatching)
     }
     fun filterCloths(typeCloth: String?) {
-        val filteredList = ArrayList(mList.filter {it.split(',')[1] != typeCloth})
+        val filteredList = ArrayList(fullMatching.filter {it.split(',')[1] != typeCloth})
         updateList(filteredList)
     }
     private fun updateList(newList: ArrayList<String>) {
-        mList = newList
+        fullMatching = newList
         notifyDataSetChanged()
     }
 

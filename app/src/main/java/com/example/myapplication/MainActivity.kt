@@ -32,6 +32,7 @@ class MainActivity : ComponentActivity() {
     private var storageRef = Firebase.storage.reference
     private var db = Firebase.firestore
     private var uri: Uri? = null
+    private var backUri: Uri? = null
     private var items = ArrayList<Cloths>()
     private var adapter = ClothsAdapter(items)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -141,7 +142,7 @@ class MainActivity : ComponentActivity() {
         val typeOfCloths = dialogLayout.findViewById<SwitchCompat>(R.id.switchCloths)
 
         builder.setView(dialogLayout)
-        builder.setPositiveButton("Ok") { _, _ ->
+            .setPositiveButton("Ok") { _, _ ->
             Log.d("Main", "Positive button clicked")
             val metadata: ArrayList<Any> = arrayListOf(
                 name.text.toString(),
@@ -149,13 +150,14 @@ class MainActivity : ComponentActivity() {
                 shaharLike.text.toString(),
                 typeOfCloths.isChecked
             )
+            if (items.none { it.name == name.text.toString() }) {uploadFile(metadata)}
+            else(Toast.makeText(this,"Item With That Name Already Exists", Toast.LENGTH_SHORT).show())}
 
-
-        if (items.none { it.name == name.text.toString() }) {uploadFile(metadata)}
-        else(Toast.makeText(this,"Item With That Name Already Exists", Toast.LENGTH_SHORT).show())}
-        builder.setNegativeButton("Cancel") { _, _ ->
+            .setNeutralButton("Add Back Side") { _, _ ->
+        }
+            .setNegativeButton("Cancel") { _, _ ->
             Log.d("Main", "Negative button clicked")}
-        builder.show()
+            .show()
     }
 
     private fun uploadFile(metadata: ArrayList<Any>) {
