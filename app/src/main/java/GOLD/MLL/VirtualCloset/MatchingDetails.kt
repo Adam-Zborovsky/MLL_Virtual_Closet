@@ -1,5 +1,6 @@
-package com.example.myapplication
+package GOLD.MLL.VirtualCloset
 
+import GOLD.MLL.VirtualCloset.Adapters.EditMatchingAdapter
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton

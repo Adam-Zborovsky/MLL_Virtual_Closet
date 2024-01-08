@@ -1,5 +1,6 @@
-package com.example.myapplication
+package GOLD.MLL.VirtualCloset.Adapters
 
+import GOLD.MLL.VirtualCloset.R
 import android.app.AlertDialog
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,7 +15,7 @@ import com.bumptech.glide.Glide
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 
-class EditMatchingAdapter(private var fullMatching: ArrayList<String>, private var oldMatching: ArrayList<String>, private var parentName :String, private var parentType :String)  : RecyclerView.Adapter<EditMatchingAdapter.ViewHolder>() {
+class EditMatchingAdapter(private var fullMatching: List<String>, private var oldMatching: List<String>, private var parentName :String, private var parentType :String)  : RecyclerView.Adapter<EditMatchingAdapter.ViewHolder>() {
     private var db = Firebase.firestore
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -93,22 +94,22 @@ class EditMatchingAdapter(private var fullMatching: ArrayList<String>, private v
         return fullMatching.size
     }
     fun sortByALike() {
-        val sortedList = ArrayList(fullMatching.sortedByDescending { it.split(',')[3].toInt()})
+        val sortedList = fullMatching.sortedByDescending { it.split(',')[3].toInt()}
         updateList(sortedList)
     }
     fun sortBySLike() {
-        val sortedList = ArrayList(fullMatching.sortedByDescending { it.split(',')[2].toInt()})
+        val sortedList = fullMatching.sortedByDescending { it.split(',')[2].toInt()}
         updateList(sortedList)
     }
     fun sortRandomly() {
-        fullMatching = ArrayList(fullMatching.shuffled())
+        fullMatching = fullMatching.shuffled()
         updateList(fullMatching)
     }
     fun filterCloths(typeCloth: String?) {
-        val filteredList = ArrayList(fullMatching.filter {it.split(',')[1] != typeCloth})
+        val filteredList = fullMatching.filter {it.split(',')[1] != typeCloth}
         updateList(filteredList)
     }
-    private fun updateList(newList: ArrayList<String>) {
+    private fun updateList(newList: List<String>) {
         fullMatching = newList
         notifyDataSetChanged()
     }

@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.myapplication"
+    namespace = "GOLD.MLL.VirtualCloset"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.myapplication"
+        applicationId = "GOLD.MLL.VirtualCloset"
         minSdk = 33
         targetSdk = 34
         versionCode = 1

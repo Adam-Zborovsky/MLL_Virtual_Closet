@@ -1,5 +1,6 @@
-package com.example.myapplication
+package GOLD.MLL.VirtualCloset.Adapters
 
+import GOLD.MLL.VirtualCloset.R
 import android.app.AlertDialog
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,10 +11,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import GOLD.MLL.VirtualCloset.Cloths
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 
-class MatchingAdapter(private var mList: ArrayList<String>)  : RecyclerView.Adapter<MatchingAdapter.ViewHolder>() {
+class MatchingAdapter(private var mList: List<Cloths>)  : RecyclerView.Adapter<MatchingAdapter.ViewHolder>() {
     private var db = Firebase.firestore
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -22,20 +24,20 @@ class MatchingAdapter(private var mList: ArrayList<String>)  : RecyclerView.Adap
         val holder = ViewHolder(view)
 
         val prodImage = view.findViewById<ImageButton>(R.id.prodImage)
-        prodImage.setOnClickListener { bigPicture(mList[holder.adapterPosition], view) }
+//        prodImage.setOnClickListener { bigPicture(mList[holder.adapterPosition], view) }
 
         return holder
     }
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val clothsList = mList[position].split(",").map { it.trim() }
+//        val clothsList = mList[position].split(",").map { it.trim() }
 
-
-        Glide.with(holder.itemView.context)
-            .asDrawable()
-            .load(clothsList[4])
-            .into(holder.prodImage)
-
-        holder.details.text = "${clothsList[0]}\nView User: ${clothsList[3]}\nEdit User: ${clothsList[2]}"
+//
+//        Glide.with(holder.itemView.context)
+//            .asDrawable()
+//            .load(clothsList[4])
+//            .into(holder.prodImage)
+//
+//        holder.details.text = "${clothsList[0]}\nView User: ${clothsList[3]}\nEdit User: ${clothsList[2]}"
     }
     private fun bigPicture(clothsList: String, view: View) {
         val builder = AlertDialog.Builder(view.context)
@@ -57,22 +59,22 @@ class MatchingAdapter(private var mList: ArrayList<String>)  : RecyclerView.Adap
         return mList.size
     }
     fun sortByALike() {
-        val sortedList = ArrayList(mList.sortedByDescending { it.split(',')[3].toInt()})
+        val sortedList = mList.sortedByDescending { it.aLike}
         updateList(sortedList)
     }
     fun sortBySLike() {
-        val sortedList = ArrayList(mList.sortedByDescending { it.split(',')[2].toInt()})
+        val sortedList = mList.sortedByDescending { it.sLike}
         updateList(sortedList)
     }
     fun sortRandomly() {
-        mList = ArrayList(mList.shuffled())
+        mList = mList.shuffled()
         updateList(mList)
     }
     fun filterCloths(typeCloth: String?) {
-        val filteredList = ArrayList(mList.filter {it.split(',')[1] != typeCloth})
+        val filteredList = mList.filter {it.typeCloth != typeCloth}
         updateList(filteredList)
     }
-    private fun updateList(newList: ArrayList<String>) {
+    private fun updateList(newList: List<Cloths>) {
         mList = newList
         notifyDataSetChanged()
     }

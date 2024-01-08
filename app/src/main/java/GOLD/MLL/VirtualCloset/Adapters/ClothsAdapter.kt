@@ -1,4 +1,6 @@
-    package com.example.myapplication
+    package GOLD.MLL.VirtualCloset.Adapters
+
+    import GOLD.MLL.VirtualCloset.R
     import android.content.Intent
     import android.util.Log
     import android.view.LayoutInflater
@@ -8,6 +10,8 @@
     import android.widget.TextView
     import androidx.recyclerview.widget.RecyclerView
     import com.bumptech.glide.Glide
+    import GOLD.MLL.VirtualCloset.Cloths
+    import GOLD.MLL.VirtualCloset.ProductDetails
 
     class ClothsAdapter(private var mList: List<Cloths>) : RecyclerView.Adapter<ClothsAdapter.ViewHolder>() {
         private var fullList: List<Cloths> = mList
@@ -19,18 +23,7 @@
             val holder = ViewHolder(view)
             view.setOnClickListener{
                 val intent = Intent(parent.context, ProductDetails::class.java)
-                intent.putExtra("name", mList[holder.adapterPosition].name)
-                intent.putExtra("typeCloth", mList[holder.adapterPosition].typeCloth)
-                intent.putExtra("sLike", mList[holder.adapterPosition].sLike)
-                intent.putExtra("aLike", mList[holder.adapterPosition].aLike)
-                intent.putExtra("photoUrl", mList[holder.adapterPosition].photoUrl)
-                val matching =  mList[holder.adapterPosition].matching
-                Log.e("Matching",matching.map { it.trim() }.toString())
-                intent.putExtra("matching", ArrayList(matching))
-                val fullList = arrayListOf<String>()
-                for (i in mList){fullList.add(i.toString())}
-                intent.putExtra("fullList", fullList)
-                intent.putExtra("switch", switch)
+                intent.putExtra("mList", mList[holder.adapterPosition])
                 parent.context.startActivity(intent)
             }
 

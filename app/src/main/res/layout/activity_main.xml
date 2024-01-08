@@ -16,6 +16,7 @@
         tools:context=".MainActivity" >
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -69,10 +70,10 @@
             <RelativeLayout
                 android:layout_width="125dp"
                 android:layout_height="50dp"
-                android:layout_marginTop="750dp"
-                android:layout_marginEnd="24dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_marginEnd="25dp"
+                android:layout_marginBottom="50dp"
+                app:layout_constraintBottom_toBottomOf="@+id/constraintLayout"
+                app:layout_constraintEnd_toEndOf="@+id/constraintLayout">
 
 
                 <androidx.appcompat.widget.SwitchCompat

@@ -1,4 +1,4 @@
-package com.example.myapplication
+package GOLD.MLL.VirtualCloset
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -21,6 +21,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import GOLD.MLL.VirtualCloset.Adapters.ClothsAdapter
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Firebase
@@ -84,7 +85,9 @@ class MainActivity : ComponentActivity() {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 val data = it.data
                 val imgUri = data?.data
-                if (imgUri != null){uri = imgUri}
+                if (imgUri != null) {
+                    uri = imgUri
+                }
             }
         uploadButton.setOnClickListener {
             Log.i("Upload Button", "pressed")
@@ -101,6 +104,7 @@ class MainActivity : ComponentActivity() {
                     val showPants = naviview.menu.findItem(R.id.pantsIco).isChecked
                     adapter.filterCloths(showShirts, showPants)
                 }
+
                 R.id.likeA, R.id.likeS, R.id.rnd -> {
                     naviview.menu.findItem(R.id.likeA).isChecked = false
                     naviview.menu.findItem(R.id.likeS).isChecked = false
@@ -112,7 +116,8 @@ class MainActivity : ComponentActivity() {
                         R.id.likeS -> adapter.sortBySLike()
                         R.id.rnd -> adapter.sortRandomly()
                     }
-                    containerRL.background = ResourcesCompat.getDrawable(resources, backgroundResId, null)
+                    containerRL.background =
+                        ResourcesCompat.getDrawable(resources, backgroundResId, null)
                 }
             }
             false
@@ -125,14 +130,15 @@ class MainActivity : ComponentActivity() {
             adapter = ClothsAdapter(items)
             switchOnOff.isChecked = false
             switch = false
-            containerRL.background = ResourcesCompat.getDrawable(resources, R.drawable.background_adam, null)
+            containerRL.background =
+                ResourcesCompat.getDrawable(resources, R.drawable.background_adam, null)
             naviview.background = containerRL.background
             tvSwitchShahar.setTextColor(ContextCompat.getColor(this, R.color.blue))
             tvSwitchAdam.setTextColor(ContextCompat.getColor(this, R.color.white))
         }
     }
 
-    private fun metaOfFile(){
+    private fun metaOfFile() {
         val builder = AlertDialog.Builder(this)
         val inflater: LayoutInflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.upload_dialog_box, null)
@@ -148,67 +154,91 @@ class MainActivity : ComponentActivity() {
                 name.text.toString(),
                 adamLike.text.toString(),
                 shaharLike.text.toString(),
-                typeOfCloths.isChecked
-            )
-            if (items.none { it.name == name.text.toString() }) {uploadFile(metadata)}
-            else(Toast.makeText(this,"Item With That Name Already Exists", Toast.LENGTH_SHORT).show())}
-
-            .setNeutralButton("Add Back Side") { _, _ ->
+                typeOfCloths.isChecked)
+            if (items.none { it.name == name.text.toString() }) {
+                uploadFile(metadata)
+            } else (Toast.makeText(this, "Item With That Name Already Exists", Toast.LENGTH_SHORT)
+                .show())
         }
             .setNegativeButton("Cancel") { _, _ ->
-            Log.d("Main", "Negative button clicked")}
+            Log.d("Main", "Negative button clicked")
+        }
+            .setNeutralButton("Add Back Side"){_, _ ->
+                val pickImg = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+                val chooseImage =
+                    registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                        val data = it.data
+                        val imgUri = data?.data
+                        if (imgUri != null) {
+                            backUri = imgUri
+                        }
+                    }
+                chooseImage.launch(pickImg).toString()
+            }
             .show()
     }
 
     private fun uploadFile(metadata: ArrayList<Any>) {
-        val recyclerview = findViewById<RecyclerView>(R.id.recyclerView)
-        recyclerview.layoutManager = GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
-        if (uri != null) {
-            val folder = if (metadata[3] as Boolean){"Shirts"} else{"Pants"}
-            val ref = storageRef.child(folder +"/"+ metadata[0].toString())
-            val uploadTask = ref.putFile(uri!!)
-            uploadTask.addOnSuccessListener { Log.d("Upload To Storage", "Success") }
-                .addOnFailureListener{Log.e("Upload To Storage", "Failed")}
-            uploadTask.continueWithTask {
-                ref.downloadUrl
-            }.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val downloadUri = task.result
-                    db.collection(folder).document(metadata[0].toString())
-                        .set(hashMapOf(
-                            "Name" to metadata[0],
-                            "ShaharLikes" to metadata[2].toString().toInt(),
-                            "AdamLikes" to metadata[1].toString().toInt(),
-                            "URL" to downloadUri,
-                            "matching" to arrayListOf<String>()))
-
-                        .addOnSuccessListener {Log.d(  "Upload To Database","DocumentSnapshot successfully written!")
-                        downFromDatabase()
-                            items = arrayListOf()
-                        adapter = ClothsAdapter(items)
+        uri?.let { uri ->
+            val folder = if (metadata[3] as Boolean) "Shirts" else "Pants"
+            val fileName = metadata[0].toString()
+            val ref = storageRef.child("$folder/$fileName")
+            val uploadTask = ref.putFile(uri)
+            var backside = ""
+            if (backUri != null){
+                val backRef = storageRef.child("BackSide/$fileName")
+                backRef.putFile(uri)
+                Log.e("backurl", backRef.downloadUrl.toString())
+                backside = backRef.downloadUrl.toString()
+            }
+            uploadTask.addOnSuccessListener {
+                Log.d("Upload To Storage", "Success")
+                ref.downloadUrl.addOnSuccessListener { downloadUri ->
+                    val data = hashMapOf(
+                        "Name" to metadata[0],
+                        "ShaharLikes" to metadata[2].toString().toInt(),
+                        "AdamLikes" to metadata[1].toString().toInt(),
+                        "URL" to downloadUri.toString(),
+                        "BackSide" to backside,
+                        "matching" to arrayListOf<String>())
+                    db.collection(folder).document(fileName)
+                        .set(data)
+                        .addOnSuccessListener {
+                            Log.d("Upload To Database", "DocumentSnapshot successfully written!")
                         }
-                        .addOnFailureListener { Log.e("Upload To Database", "Error writing document") }
+                        .addOnFailureListener { e ->
+                            Log.e("Upload To Database", "Error writing document", e)
+                        }
+                }.addOnFailureListener { e ->
+                    Log.e("Upload To Storage", "Failed to get download URL", e)
                 }
+            }.addOnFailureListener { e ->
+                Log.e("Upload To Storage", "Upload failed", e)
             }
         }
     }
 
+
     private fun downFromDatabase() {
         val recyclerview = findViewById<RecyclerView>(R.id.recyclerView)
-        recyclerview.layoutManager = GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
+        recyclerview.layoutManager =
+            GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
         db.collection("Shirts")
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
                     val dat = document.data
-                    items.add(Cloths(
-                        dat["Name"].toString(),
-                        "Shirts",
-                        dat["ShaharLikes"].toString().toInt(),
-                        dat["AdamLikes"].toString().toInt(),
-                        dat["URL"].toString(),
-                        dat["matching"] as ArrayList<String>
-                    ))
+                    items.add(
+                        Cloths(
+                            dat["Name"].toString(),
+                            "Shirts",
+                            dat["ShaharLikes"].toString().toInt(),
+                            dat["AdamLikes"].toString().toInt(),
+                            dat["URL"].toString(),
+                            dat["BackSide"].toString(),
+                            dat["matching"] as List<String>
+                        )
+                    )
                     items.shuffle()
                 }
             }
@@ -216,21 +246,24 @@ class MainActivity : ComponentActivity() {
                 recyclerview.adapter = adapter
             }
             .addOnFailureListener { exception ->
-                 Log.d("Error getting documents: ", exception.toString())
+                Log.d("Error getting documents: ", exception.toString())
             }
         db.collection("Pants")
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
                     val dat = document.data
-                    items.add(Cloths(
-                        dat["Name"].toString(),
-                        "Pants",
-                        dat["ShaharLikes"].toString().toInt(),
-                        dat["AdamLikes"].toString().toInt(),
-                        dat["URL"].toString(),
-                        dat["matching"] as ArrayList<String>
-                    ))
+                    items.add(
+                        Cloths(
+                            dat["Name"].toString(),
+                            "Pants",
+                            dat["ShaharLikes"].toString().toInt(),
+                            dat["AdamLikes"].toString().toInt(),
+                            dat["URL"].toString(),
+                            dat["BackSide"].toString(),
+                            dat["matching"] as List<String>
+                        )
+                    )
                     items.shuffle()
                 }
             }
@@ -238,8 +271,8 @@ class MainActivity : ComponentActivity() {
                 recyclerview.adapter = adapter
             }
             .addOnFailureListener { exception ->
-                 Log.d("Error getting documents: ", exception.toString())
+                Log.d("Error getting documents: ", exception.toString())
             }
-
     }
 }
+
