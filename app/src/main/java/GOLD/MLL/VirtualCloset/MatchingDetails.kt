@@ -19,29 +19,28 @@ class MatchingDetails : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.matching_details)
 
-        val fullList: ArrayList<String> = intent.getStringArrayListExtra("fullList")as ArrayList<String>? ?: arrayListOf()
-        val matching: ArrayList<String> = intent.getStringArrayListExtra("matching")as ArrayList<String>? ?: arrayListOf()
-        val typeCloth = intent.getStringExtra("typeCloth")
-        val name= intent.getStringExtra("name")
+        val fullList = intent.getSerializableExtra("fullList") as List<Cloths>
+        val clothsItem = intent.getSerializableExtra("clothsItem") as Cloths
 
         val containerRL = findViewById<ConstraintLayout>(R.id.containerRL)
         val recyclerview = findViewById<RecyclerView>(R.id.matching_edit)
         val openNav = findViewById<ImageButton>(R.id.openNav)
         val naviview = findViewById<NavigationView>(R.id.naviView)
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
-        containerRL.background = ResourcesCompat.getDrawable(resources, R.drawable.background_shahar, null)
+        containerRL.background = ResourcesCompat.getDrawable(resources,
+            R.drawable.background_shahar, null)
         naviview.background = containerRL.background
 
-        val adapter = EditMatchingAdapter(fullList, matching, name.toString(), typeCloth.toString())
+        val adapter = EditMatchingAdapter(fullList, clothsItem,)
         recyclerview.layoutManager = LinearLayoutManager(this)
         recyclerview.adapter = adapter
-        adapter.filterCloths(typeCloth)
+        adapter.filterCloths(clothsItem.typeCloth)
 
         openNav.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
             var filter = naviview.menu.findItem(R.id.shirtIco)
-            if (typeCloth != "Shirt"){filter = naviview.menu.findItem(R.id.shirtIco)}
-            if (typeCloth != "Pants"){filter = naviview.menu.findItem(R.id.pantsIco)}
+            if (clothsItem.typeCloth != "Shirt"){filter = naviview.menu.findItem(R.id.shirtIco)}
+            if (clothsItem.typeCloth != "Pants"){filter = naviview.menu.findItem(R.id.pantsIco)}
             filter.isChecked = false
         }
 
@@ -58,7 +57,8 @@ class MatchingDetails : AppCompatActivity(){
                         R.id.likeS -> adapter.sortBySLike()
                         R.id.rnd -> adapter.sortRandomly()
                     }
-                    containerRL.background = ResourcesCompat.getDrawable(resources, R.drawable.background_shahar, null)
+                    containerRL.background = ResourcesCompat.getDrawable(resources,
+                        R.drawable.background_shahar, null)
                 }
             }
             false
@@ -66,7 +66,9 @@ class MatchingDetails : AppCompatActivity(){
 
         val done = findViewById<ImageButton>(R.id.done)
         done.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, ProductDetails::class.java)
+            intent.putExtra("fullList", ArrayList(fullList))
+            intent.putExtra("clothsItem", clothsItem)
             startActivity(intent)
         }
     }

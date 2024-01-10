@@ -25,14 +25,33 @@
             android:textColor="@color/black"
             android:textSize="24sp" />
 
-        <ImageView
-            android:id="@+id/prod"
-            android:layout_width="200dp"
-            android:layout_height="250dp"
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:contentDescription="product image"
-            android:src="@color/cardview_dark_background" />
+            android:layout_marginTop="10dp">
+
+            <ImageView
+                android:id="@+id/prod"
+                android:layout_width="200dp"
+                android:layout_height="250dp"
+                android:contentDescription="product image" />
+
+            <View
+                android:id="@+id/backsideBackground"
+                android:layout_width="42dp"
+                android:layout_height="57dp"
+                android:background="#66000000"
+                android:layout_gravity="bottom|end"
+                android:visibility="gone"/>
+            <ImageButton
+                android:id="@+id/prodBack"
+                android:layout_width="40dp"
+                android:layout_height="55dp"
+                android:layout_gravity="bottom|end"
+                android:background="@android:color/transparent"
+                android:contentDescription="product back image" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/like"
@@ -60,7 +79,7 @@
         android:layout_marginTop="410dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
     </androidx.recyclerview.widget.RecyclerView>
 
@@ -68,7 +87,7 @@
         android:id="@+id/buttonLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="30dp"
+        android:layout_margin="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -94,8 +113,8 @@
             android:id="@+id/addButton"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginTop="775dp"
-            android:layout_gravity="end"
+            android:layout_marginBottom="20dp"
+            android:layout_gravity="bottom|end"
             android:background="@drawable/ic_add"
             android:contentDescription="Add" />
 

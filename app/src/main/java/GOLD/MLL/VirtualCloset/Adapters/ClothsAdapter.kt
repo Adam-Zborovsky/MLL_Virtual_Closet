@@ -23,7 +23,9 @@
             val holder = ViewHolder(view)
             view.setOnClickListener{
                 val intent = Intent(parent.context, ProductDetails::class.java)
-                intent.putExtra("mList", mList[holder.adapterPosition])
+                intent.putExtra("fullList", ArrayList(mList))
+                intent.putExtra("clothsItem", mList[holder.adapterPosition])
+                intent.putExtra("switch", switch)
                 parent.context.startActivity(intent)
             }
 
@@ -31,11 +33,7 @@
         }
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val clothsList = mList[position]
-            Glide.with(holder.itemView.context)
-                .asDrawable()
-                .load(clothsList.photoUrl)
-                .centerCrop()
-                .into(holder.image)
+            Glide.with(holder.itemView.context).asDrawable().load(clothsList.photoUrl).centerCrop().into(holder.image)
 
             holder.name.text = clothsList.name
             holder.likes.text = "View User: ${clothsList.aLike}   Edit User: ${clothsList.sLike}"

@@ -1,5 +1,6 @@
 package GOLD.MLL.VirtualCloset.Adapters
 
+import GOLD.MLL.VirtualCloset.Cloths
 import GOLD.MLL.VirtualCloset.R
 import android.app.AlertDialog
 import android.util.Log
@@ -15,7 +16,7 @@ import com.bumptech.glide.Glide
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 
-class EditMatchingAdapter(private var fullMatching: List<String>, private var oldMatching: List<String>, private var parentName :String, private var parentType :String)  : RecyclerView.Adapter<EditMatchingAdapter.ViewHolder>() {
+class EditMatchingAdapter(private var fullMatching: List<Cloths>, private var parent: Cloths)  : RecyclerView.Adapter<EditMatchingAdapter.ViewHolder>() {
     private var db = Firebase.firestore
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -31,30 +32,26 @@ class EditMatchingAdapter(private var fullMatching: List<String>, private var ol
         return holder
     }
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val clothsList = fullMatching[position].split(",").map { it.trim() }
+        val clothsItem = fullMatching[position]
 
-        Glide.with(holder.itemView.context)
-            .asDrawable()
-            .load(clothsList[4])
-            .into(holder.prodImage)
+        Glide.with(holder.itemView.context).asDrawable().load(clothsItem.photoUrl).into(holder.prodImage)
 
-        holder.details.text = "${clothsList[0]}\nView User: ${clothsList[3]}\nEdit User: ${clothsList[2]}"
+        holder.details.text = "${clothsItem.name}\nView User: ${clothsItem.aLike}\nEdit User: ${clothsItem.sLike}"
 
-        for (i in oldMatching) {
-            if (i.split(",")[0] == clothsList[0]) {
+        for (i in parent.matching) {
+            if (i.split(",")[0] == clothsItem.name) {
                 holder.addBox.isChecked = true}
         }
 
         holder.addBox.setOnCheckedChangeListener { _, isChecked ->
-            uploadMatching(clothsList, isChecked)
+            uploadMatching(clothsItem, isChecked)
         }
     }
 
-    private fun bigPicture(clothsList: String, view: View) {
+    private fun bigPicture(clothsList: Cloths, view: View) {
         val builder = AlertDialog.Builder(view.context)
         val inflater: LayoutInflater = LayoutInflater.from(view.context)
         val dialogLayout = inflater.inflate(R.layout.big_picture, null)
-        val clothsList = clothsList.split(",").map { it.trim() }
 
         Log.e("clothsList",clothsList.toString())
         builder.setView(dialogLayout)
@@ -62,27 +59,27 @@ class EditMatchingAdapter(private var fullMatching: List<String>, private var ol
         val bigPicture = dialogLayout.findViewById<ImageView>(R.id.big_picture)
         Glide.with(view)
             .asDrawable()
-            .load(clothsList[4])
+            .load(clothsList.photoUrl)
             .into(bigPicture)
         builder.show()
     }
 
-    private fun uploadMatching(clothsList : List<String>, isChecked: Boolean) {
+    private fun uploadMatching(clothsItem: Cloths, isChecked: Boolean) {
 
-        val collectionRef = db.collection(parentType)
-        val documentRef = collectionRef.document(parentName)
+        val collectionRef = db.collection(parent.typeCloth)
+        val documentRef = collectionRef.document(parent.name)
 
-        var itemToModify = clothsList.toString()
-        itemToModify = itemToModify.substring(1, itemToModify.length - 1)
-//        Log.e("ClotList",clothsList.toString())
+        val itemToModify = clothsItem.toString()
 
         if (isChecked) {
+            parent.matching.add(itemToModify)
             Log.e("Firestore", "Add Item")
 //             Add the item to the array field in the document
             documentRef.update("matching", com.google.firebase.firestore.FieldValue.arrayUnion(itemToModify))
                 .addOnSuccessListener { Log.d("Firestore", "Item successfully added to array!") }
                 .addOnFailureListener { e -> Log.w("Firestore", "Error adding item to array", e) }
         } else {
+            parent.matching.remove(itemToModify)
             Log.e("Firestore", "Remove Item")
 //             Remove the item from the array field in the document
             documentRef.update("matching", com.google.firebase.firestore.FieldValue.arrayRemove(itemToModify))
@@ -94,11 +91,11 @@ class EditMatchingAdapter(private var fullMatching: List<String>, private var ol
         return fullMatching.size
     }
     fun sortByALike() {
-        val sortedList = fullMatching.sortedByDescending { it.split(',')[3].toInt()}
+        val sortedList = fullMatching.sortedByDescending { it.aLike}
         updateList(sortedList)
     }
     fun sortBySLike() {
-        val sortedList = fullMatching.sortedByDescending { it.split(',')[2].toInt()}
+        val sortedList = fullMatching.sortedByDescending { it.sLike}
         updateList(sortedList)
     }
     fun sortRandomly() {
@@ -106,10 +103,10 @@ class EditMatchingAdapter(private var fullMatching: List<String>, private var ol
         updateList(fullMatching)
     }
     fun filterCloths(typeCloth: String?) {
-        val filteredList = fullMatching.filter {it.split(',')[1] != typeCloth}
+        val filteredList = fullMatching.filter {it.typeCloth != typeCloth}
         updateList(filteredList)
     }
-    private fun updateList(newList: List<String>) {
+    private fun updateList(newList: List<Cloths>) {
         fullMatching = newList
         notifyDataSetChanged()
     }

@@ -22,11 +22,20 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import GOLD.MLL.VirtualCloset.Adapters.ClothsAdapter
+import android.widget.Button
+import androidx.activity.result.ActivityResultLauncher
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.storage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 
 class MainActivity : ComponentActivity() {
@@ -34,6 +43,7 @@ class MainActivity : ComponentActivity() {
     private var db = Firebase.firestore
     private var uri: Uri? = null
     private var backUri: Uri? = null
+    private lateinit var chooseBackImage: ActivityResultLauncher<Intent>
     private var items = ArrayList<Cloths>()
     private var adapter = ClothsAdapter(items)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +53,7 @@ class MainActivity : ComponentActivity() {
 
         val naviview = findViewById<NavigationView>(R.id.naviView)
         val uploadButton = findViewById<MaterialButton>(R.id.uploadBT)
+        val wishlist = findViewById<ImageButton>(R.id.wishlist)
         val switchOnOff = findViewById<SwitchCompat>(R.id.switchOnOff)
         val containerRL = findViewById<RelativeLayout>(R.id.idRLContainer)
         val tvSwitchShahar = findViewById<TextView>(R.id.tvSwitchYes)
@@ -81,18 +92,29 @@ class MainActivity : ComponentActivity() {
         }
 
         val pickImg = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-        val chooseImage =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        val chooseImage = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 val data = it.data
                 val imgUri = data?.data
                 if (imgUri != null) {
                     uri = imgUri
                 }
             }
+        chooseBackImage = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                val data = it.data
+                val imgUri = data?.data
+                if (imgUri != null) {
+                    backUri = imgUri
+                }
+            }
         uploadButton.setOnClickListener {
             Log.i("Upload Button", "pressed")
-            chooseImage.launch(pickImg).toString()
+            chooseImage.launch(pickImg)
             metaOfFile()
+        }
+
+        wishlist.setOnClickListener {
+            val intent = Intent(this, Wishlist::class.java)
+            this.startActivity(intent)
         }
 
         naviview.setNavigationItemSelectedListener { menuItem ->
@@ -146,9 +168,17 @@ class MainActivity : ComponentActivity() {
         val adamLike = dialogLayout.findViewById<EditText>(R.id.adamLike)
         val shaharLike = dialogLayout.findViewById<EditText>(R.id.shaharLike)
         val typeOfCloths = dialogLayout.findViewById<SwitchCompat>(R.id.switchCloths)
+        val pickImg = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
 
-        builder.setView(dialogLayout)
-            .setPositiveButton("Ok") { _, _ ->
+        val dialog = builder.create()
+        dialog.setView(dialogLayout)
+
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok") { _, _ -> }
+        dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel") { _, _ -> }
+        dialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Add Back Side") { _, _ -> }
+        dialog.show()
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
             Log.d("Main", "Positive button clicked")
             val metadata: ArrayList<Any> = arrayListOf(
                 name.text.toString(),
@@ -157,25 +187,18 @@ class MainActivity : ComponentActivity() {
                 typeOfCloths.isChecked)
             if (items.none { it.name == name.text.toString() }) {
                 uploadFile(metadata)
-            } else (Toast.makeText(this, "Item With That Name Already Exists", Toast.LENGTH_SHORT)
-                .show())
+            } else (Toast.makeText(this, "Item With That Name Already Exists", Toast.LENGTH_SHORT).show())
+            dialog.dismiss()
         }
-            .setNegativeButton("Cancel") { _, _ ->
+
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener {
             Log.d("Main", "Negative button clicked")
+            dialog.dismiss()
         }
-            .setNeutralButton("Add Back Side"){_, _ ->
-                val pickImg = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-                val chooseImage =
-                    registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                        val data = it.data
-                        val imgUri = data?.data
-                        if (imgUri != null) {
-                            backUri = imgUri
-                        }
-                    }
-                chooseImage.launch(pickImg).toString()
-            }
-            .show()
+
+        dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
+            chooseBackImage.launch(pickImg)
+        }
     }
 
     private fun uploadFile(metadata: ArrayList<Any>) {
@@ -187,9 +210,11 @@ class MainActivity : ComponentActivity() {
             var backside = ""
             if (backUri != null){
                 val backRef = storageRef.child("BackSide/$fileName")
-                backRef.putFile(uri)
-                Log.e("backurl", backRef.downloadUrl.toString())
-                backside = backRef.downloadUrl.toString()
+                backRef.putFile(backUri!!).addOnSuccessListener {
+                    backRef.downloadUrl.addOnSuccessListener { backDownloadUri ->
+                        backside = backDownloadUri.toString()
+                    }
+                }
             }
             uploadTask.addOnSuccessListener {
                 Log.d("Upload To Storage", "Success")
@@ -200,20 +225,14 @@ class MainActivity : ComponentActivity() {
                         "AdamLikes" to metadata[1].toString().toInt(),
                         "URL" to downloadUri.toString(),
                         "BackSide" to backside,
-                        "matching" to arrayListOf<String>())
+                        "matching" to arrayListOf<String>()
+                    )
                     db.collection(folder).document(fileName)
                         .set(data)
                         .addOnSuccessListener {
                             Log.d("Upload To Database", "DocumentSnapshot successfully written!")
                         }
-                        .addOnFailureListener { e ->
-                            Log.e("Upload To Database", "Error writing document", e)
-                        }
-                }.addOnFailureListener { e ->
-                    Log.e("Upload To Storage", "Failed to get download URL", e)
                 }
-            }.addOnFailureListener { e ->
-                Log.e("Upload To Storage", "Upload failed", e)
             }
         }
     }
@@ -221,58 +240,46 @@ class MainActivity : ComponentActivity() {
 
     private fun downFromDatabase() {
         val recyclerview = findViewById<RecyclerView>(R.id.recyclerView)
-        recyclerview.layoutManager =
-            GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
-        db.collection("Shirts")
-            .get()
-            .addOnSuccessListener { result ->
-                for (document in result) {
-                    val dat = document.data
-                    items.add(
-                        Cloths(
-                            dat["Name"].toString(),
-                            "Shirts",
-                            dat["ShaharLikes"].toString().toInt(),
-                            dat["AdamLikes"].toString().toInt(),
-                            dat["URL"].toString(),
-                            dat["BackSide"].toString(),
-                            dat["matching"] as List<String>
-                        )
-                    )
-                    items.shuffle()
+        recyclerview.layoutManager = GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
+
+        // Use a coroutine to handle asynchronous fetching
+        CoroutineScope(Dispatchers.IO).launch {
+            val deferredResults = listOf("Shirts", "Pants").map { collection ->
+                async { fetchDataFromCollection(collection) }
+            }
+
+            val fetchedItems = deferredResults.awaitAll().flatten()
+            withContext(Dispatchers.Main) {
+                if (fetchedItems.isNotEmpty()) {
+                    items.addAll(fetchedItems.shuffled())
+                    recyclerview.adapter = adapter
+                } else {
+                    Log.d("Error", "Failed to fetch data")
                 }
             }
-            .addOnCompleteListener() {
-                recyclerview.adapter = adapter
-            }
-            .addOnFailureListener { exception ->
-                Log.d("Error getting documents: ", exception.toString())
-            }
-        db.collection("Pants")
-            .get()
-            .addOnSuccessListener { result ->
-                for (document in result) {
-                    val dat = document.data
-                    items.add(
-                        Cloths(
-                            dat["Name"].toString(),
-                            "Pants",
-                            dat["ShaharLikes"].toString().toInt(),
-                            dat["AdamLikes"].toString().toInt(),
-                            dat["URL"].toString(),
-                            dat["BackSide"].toString(),
-                            dat["matching"] as List<String>
-                        )
-                    )
-                    items.shuffle()
-                }
-            }
-            .addOnCompleteListener() {
-                recyclerview.adapter = adapter
-            }
-            .addOnFailureListener { exception ->
-                Log.d("Error getting documents: ", exception.toString())
-            }
+        }
     }
+
+    private suspend fun fetchDataFromCollection(collectionName: String): List<Cloths> {
+        return try {
+            val result = db.collection(collectionName).get().await()
+            result.map { document ->
+                val dat = document.data
+                Cloths(
+                    dat["Name"].toString(),
+                    collectionName,
+                    dat["ShaharLikes"].toString().toInt(),
+                    dat["AdamLikes"].toString().toInt(),
+                    dat["URL"].toString(),
+                    dat["BackSide"].toString(),
+                    dat["matching"] as ArrayList<String>
+                )
+            }
+        } catch (exception: Exception) {
+            Log.d("Error getting documents: ", exception.toString())
+            emptyList()
+        }
+    }
+
 }
 
