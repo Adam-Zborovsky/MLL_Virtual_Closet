@@ -78,22 +78,24 @@ class ProductDetails : AppCompatActivity() {
                 builder.setNeutralButton("Delete") { _, _ ->
                     Log.d("Main", "Delete button clicked")
                     oldDocRef.delete()
-                        .addOnSuccessListener { Log.d("Firestore", "Item successfully Deleted ") }
-                        .addOnFailureListener { e ->
-                            Log.w(
-                                "Firestore",
-                                "Error Deleteding item",
-                                e
-                            )
-                        }
 
-                    val fileRefByUrl =
-                        FirebaseStorage.getInstance().getReferenceFromUrl(clothsItem.photoUrl)
-                    fileRefByUrl.delete().addOnSuccessListener {
-                        Log.d("FirebaseStorage", "File deleted successfully")
-                    }.addOnFailureListener {
-                        Log.d("FirebaseStorage", "Error deleting file", it)
+                    val fileRefByUrl = FirebaseStorage.getInstance().getReferenceFromUrl(clothsItem.photoUrl)
+                    fileRefByUrl.delete()
+                    for (i in fullList)
+                    {
+                        for (j in i.matching){
+                            if (clothsItem.name in j.split(",")){
+                                val docRef = db.collection(i.typeCloth).document(i.name)
+                                i.matching.remove("${clothsItem.name},${clothsItem.typeCloth},${clothsItem.sLike},${clothsItem.aLike},${clothsItem.photoUrl},${clothsItem.backsideUrl},${clothsItem.matching}")
+                                docRef.update("matching", i.matching)
+                            }
+                        }
                     }
+                    val intent = Intent(this, ProductDetails::class.java)
+                    intent.putExtra("fullList", ArrayList(fullList))
+                    intent.putExtra("clothsItem", clothsItem)
+                    startActivity(intent)
+
                 }
                 builder.setPositiveButton("Ok") { _, _ ->
                     Log.d("Main", "Positive button clicked")
@@ -105,14 +107,13 @@ class ProductDetails : AppCompatActivity() {
                         "BackSide" to clothsItem.backsideUrl,
                         "matching" to clothsItem.matching
                     )
-                    val folder = if (typeSelector.isChecked) {
-                        "Shirts"
-                    } else {
-                        "Pants"
-                    }
-                    val newDocRef = db.collection(folder).document(newName.text.toString())
+                    val newDocRef = db.collection(clothsItem.typeCloth).document(newName.text.toString())
                     oldDocRef.delete()
                     newDocRef.set(updates)
+                    val intent = Intent(this, ProductDetails::class.java)
+                    intent.putExtra("fullList", ArrayList(fullList))
+                    intent.putExtra("clothsItem", clothsItem)
+                    startActivity(intent)
                 }
                 builder.setNegativeButton("Cancel") { _, _ ->
                     Log.d("Main", "Negative button clicked")

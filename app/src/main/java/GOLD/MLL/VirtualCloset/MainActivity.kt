@@ -124,6 +124,8 @@ class MainActivity : ComponentActivity() {
                     menuItem.isChecked = !menuItem.isChecked
                     val showShirts = naviview.menu.findItem(R.id.shirtIco).isChecked
                     val showPants = naviview.menu.findItem(R.id.pantsIco).isChecked
+                    containerRL.background =
+                        ResourcesCompat.getDrawable(resources, backgroundResId, null)
                     adapter.filterCloths(showShirts, showPants)
                 }
 

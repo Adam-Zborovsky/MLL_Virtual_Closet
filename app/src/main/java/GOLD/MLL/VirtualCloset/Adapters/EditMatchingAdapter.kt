@@ -71,6 +71,7 @@ class EditMatchingAdapter(private var fullMatching: List<Cloths>, private var pa
 
         val itemToModify = clothsItem.toString()
 
+
         if (isChecked) {
             parent.matching.add(itemToModify)
             Log.e("Firestore", "Add Item")
