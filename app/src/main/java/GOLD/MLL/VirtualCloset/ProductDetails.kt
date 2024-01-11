@@ -83,7 +83,7 @@ class ProductDetails : AppCompatActivity() {
                     val fileRefByUrl = FirebaseStorage.getInstance().getReferenceFromUrl(clothsItem.photoUrl)
                     fileRefByUrl.delete()
                     val fileBackRefByUrl = FirebaseStorage.getInstance().getReferenceFromUrl(clothsItem.backsideUrl)
-                    fileRefByUrl.delete()
+                    fileBackRefByUrl.delete()
 
                     for (i in fullList)
                     {
