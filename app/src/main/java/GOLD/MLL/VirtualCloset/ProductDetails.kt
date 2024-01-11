@@ -69,6 +69,7 @@ class ProductDetails : AppCompatActivity() {
                 val adamLike = dialogLayout.findViewById<EditText>(R.id.adamLike)
                 val shaharLike = dialogLayout.findViewById<EditText>(R.id.shaharLike)
                 val typeSelector = dialogLayout.findViewById<SwitchCompat>(R.id.switchCloths)
+                val intent = Intent(this, MainActivity::class.java)
                 newName.setText(clothsItem.name)
                 adamLike.setText(clothsItem.aLike.toString())
                 shaharLike.setText(clothsItem.sLike.toString())
@@ -81,6 +82,9 @@ class ProductDetails : AppCompatActivity() {
 
                     val fileRefByUrl = FirebaseStorage.getInstance().getReferenceFromUrl(clothsItem.photoUrl)
                     fileRefByUrl.delete()
+                    val fileBackRefByUrl = FirebaseStorage.getInstance().getReferenceFromUrl(clothsItem.backsideUrl)
+                    fileRefByUrl.delete()
+
                     for (i in fullList)
                     {
                         for (j in i.matching){
@@ -91,9 +95,6 @@ class ProductDetails : AppCompatActivity() {
                             }
                         }
                     }
-                    val intent = Intent(this, ProductDetails::class.java)
-                    intent.putExtra("fullList", ArrayList(fullList))
-                    intent.putExtra("clothsItem", clothsItem)
                     startActivity(intent)
 
                 }
@@ -110,9 +111,6 @@ class ProductDetails : AppCompatActivity() {
                     val newDocRef = db.collection(clothsItem.typeCloth).document(newName.text.toString())
                     oldDocRef.delete()
                     newDocRef.set(updates)
-                    val intent = Intent(this, ProductDetails::class.java)
-                    intent.putExtra("fullList", ArrayList(fullList))
-                    intent.putExtra("clothsItem", clothsItem)
                     startActivity(intent)
                 }
                 builder.setNegativeButton("Cancel") { _, _ ->
