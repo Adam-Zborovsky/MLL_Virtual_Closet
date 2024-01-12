@@ -22,8 +22,13 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import GOLD.MLL.VirtualCloset.Adapters.ClothsAdapter
+import android.view.View
+import android.view.ViewTreeObserver
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
 import android.widget.Button
 import androidx.activity.result.ActivityResultLauncher
+import androidx.appcompat.widget.SearchView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Firebase
@@ -45,6 +50,7 @@ class MainActivity : ComponentActivity() {
     private var backUri: Uri? = null
     private lateinit var chooseBackImage: ActivityResultLauncher<Intent>
     private var items = ArrayList<Cloths>()
+    private lateinit var refresh: TextView
     private var adapter = ClothsAdapter(items)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +63,7 @@ class MainActivity : ComponentActivity() {
         val switchOnOff = findViewById<SwitchCompat>(R.id.switchOnOff)
         val containerRL = findViewById<RelativeLayout>(R.id.idRLContainer)
         val tvSwitchShahar = findViewById<TextView>(R.id.tvSwitchYes)
-        val refresh = findViewById<TextView>(R.id.appName)
+        refresh = findViewById(R.id.appName)
         val tvSwitchAdam = findViewById<TextView>(R.id.tvSwitchNo)
         var switch = false
         var (backgroundResId, shaharTextColor, adamTextColor) =
@@ -111,6 +117,19 @@ class MainActivity : ComponentActivity() {
             chooseImage.launch(pickImg)
             metaOfFile()
         }
+
+//        val recyclerview = findViewById<RecyclerView>(R.id.recyclerView)
+//        val searchView = findViewById<SearchView>(R.id.searchView)
+//        recyclerview.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
+//            if (!recyclerview.canScrollVertically(-1)) {
+//                searchView.visibility = View.VISIBLE
+//                searchView.background = ResourcesCompat.getDrawable(resources, backgroundResId, null)
+//                searchView.animate().translationY(0f).setInterpolator(DecelerateInterpolator()).start()
+//            } else if (scrollY > oldScrollY) {
+//                // User is scrolling down, hide the search bar
+//                searchView.animate().translationY(-searchView.height.toFloat()).setInterpolator(AccelerateInterpolator()).start()
+//            }
+//        }
 
         wishlist.setOnClickListener {
             val intent = Intent(this, Wishlist::class.java)
@@ -232,6 +251,7 @@ class MainActivity : ComponentActivity() {
                     db.collection(folder).document(fileName)
                         .set(data)
                         .addOnSuccessListener {
+                            refresh.performClick()
                             Log.d("Upload To Database", "DocumentSnapshot successfully written!")
                         }
                 }
