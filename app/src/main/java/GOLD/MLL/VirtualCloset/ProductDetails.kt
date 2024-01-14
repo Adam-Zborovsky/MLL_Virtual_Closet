@@ -9,8 +9,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import GOLD.MLL.VirtualCloset.Adapters.MatchingAdapter
-import GOLD.MLL.VirtualCloset.Cloths
-import GOLD.MLL.VirtualCloset.R
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
@@ -69,7 +67,7 @@ class ProductDetails : AppCompatActivity() {
                 val adamLike = dialogLayout.findViewById<EditText>(R.id.adamLike)
                 val shaharLike = dialogLayout.findViewById<EditText>(R.id.shaharLike)
                 val typeSelector = dialogLayout.findViewById<SwitchCompat>(R.id.switchCloths)
-                val intent = Intent(this, MainActivity::class.java)
+                val intent = Intent(this, Home::class.java)
                 newName.setText(clothsItem.name)
                 adamLike.setText(clothsItem.aLike.toString())
                 shaharLike.setText(clothsItem.sLike.toString())
@@ -131,7 +129,7 @@ class ProductDetails : AppCompatActivity() {
 
         val btnReturnHome = findViewById<ImageButton>(R.id.btnReturnHome)
         btnReturnHome.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, Home::class.java)
             startActivity(intent)
         }
 

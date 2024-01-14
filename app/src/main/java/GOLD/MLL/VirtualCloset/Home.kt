@@ -22,7 +22,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import GOLD.MLL.VirtualCloset.Adapters.ClothsAdapter
-import android.widget.Button
 import androidx.activity.result.ActivityResultLauncher
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.navigation.NavigationView
@@ -38,7 +37,7 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 
-class MainActivity : ComponentActivity() {
+class Home : ComponentActivity() {
     private var storageRef = Firebase.storage.reference
     private var db = Firebase.firestore
     private var uri: Uri? = null
@@ -48,7 +47,7 @@ class MainActivity : ComponentActivity() {
     private var adapter = ClothsAdapter(items)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_home)
         downFromDatabase()
 
         val naviview = findViewById<NavigationView>(R.id.naviView)
