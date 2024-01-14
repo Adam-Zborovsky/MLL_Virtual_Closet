@@ -9,6 +9,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import GOLD.MLL.VirtualCloset.Adapters.MatchingAdapter
+import GOLD.MLL.VirtualCloset.Cloths
+import GOLD.MLL.VirtualCloset.R
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
