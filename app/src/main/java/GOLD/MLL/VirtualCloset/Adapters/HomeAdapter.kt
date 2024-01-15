@@ -11,9 +11,9 @@
     import androidx.recyclerview.widget.RecyclerView
     import com.bumptech.glide.Glide
     import GOLD.MLL.VirtualCloset.Cloths
-    import GOLD.MLL.VirtualCloset.ProductDetails
+    import GOLD.MLL.VirtualCloset.ProductDetails.ProductDetails
 
-    class ClothsAdapter(private var mList: List<Cloths>) : RecyclerView.Adapter<ClothsAdapter.ViewHolder>() {
+    class HomeAdapter(private var mList: List<Cloths>) : RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
         private var fullList: List<Cloths> = mList
         private var switch: Boolean = false
 
@@ -56,16 +56,17 @@
         }
         fun filterCloths(showShirts: Boolean, showPants: Boolean) {
             val filteredList = fullList.filter {
+                Log.e("showPants", (showPants && it.typeCloth == "Pants").toString())
+                Log.e("showShirts", (showShirts && it.typeCloth == "Shirts").toString())
                 (showShirts && it.typeCloth == "Shirts") || (showPants && it.typeCloth == "Pants")
             }
-            Log.e("List", arrayListOf<Any>(showPants,showShirts,filteredList.toString()).toString())
             updateList(filteredList)
         }
         fun sortRandomly() {
             mList = mList.shuffled()
             updateList(mList)
         }
-        private fun updateList(newList: List<Cloths>) {
+        fun updateList(newList: List<Cloths>) {
             mList = newList
             notifyDataSetChanged()
         }

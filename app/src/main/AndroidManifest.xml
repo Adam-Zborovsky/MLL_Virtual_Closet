@@ -14,7 +14,7 @@
         android:theme="@style/Theme.MyApplication"
         >
         <activity
-            android:name=".Home"
+            android:name=".Home.Home"
             android:exported="true"
             android:theme="@style/Theme.MyApplication">
             <intent-filter>
@@ -23,8 +23,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ProductDetails"> </activity>
-        <activity android:name=".MatchingDetails"> </activity>
+        <activity android:name=".ProductDetails.ProductDetails"> </activity>
+        <activity android:name=".MatchingDetails.MatchingDetails"> </activity>
         <activity android:name=".Wishlist"> </activity>
     </application>
 

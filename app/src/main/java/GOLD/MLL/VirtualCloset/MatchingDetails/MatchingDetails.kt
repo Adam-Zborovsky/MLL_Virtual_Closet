@@ -1,6 +1,9 @@
-package GOLD.MLL.VirtualCloset
+package GOLD.MLL.VirtualCloset.MatchingDetails
 
-import GOLD.MLL.VirtualCloset.Adapters.EditMatchingAdapter
+import GOLD.MLL.VirtualCloset.Adapters.MatchingAdapter
+import GOLD.MLL.VirtualCloset.Cloths
+import GOLD.MLL.VirtualCloset.ProductDetails.ProductDetails
+import GOLD.MLL.VirtualCloset.R
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
@@ -31,7 +34,7 @@ class MatchingDetails : AppCompatActivity(){
             R.drawable.background_shahar, null)
         naviview.background = containerRL.background
 
-        val adapter = EditMatchingAdapter(fullList, clothsItem,)
+        val adapter = MatchingAdapter(fullList, clothsItem,)
         recyclerview.layoutManager = LinearLayoutManager(this)
         recyclerview.adapter = adapter
         adapter.filterCloths(clothsItem.typeCloth)

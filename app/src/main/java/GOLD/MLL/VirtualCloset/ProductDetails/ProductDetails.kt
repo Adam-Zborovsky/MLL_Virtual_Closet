@@ -1,4 +1,4 @@
-package GOLD.MLL.VirtualCloset
+package GOLD.MLL.VirtualCloset.ProductDetails
 
 import android.os.Bundle
 import android.widget.ImageButton
@@ -8,7 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import GOLD.MLL.VirtualCloset.Adapters.MatchingAdapter
+import GOLD.MLL.VirtualCloset.Adapters.ProductAdapter
+import GOLD.MLL.VirtualCloset.Cloths
+import GOLD.MLL.VirtualCloset.Home.Home
+import GOLD.MLL.VirtualCloset.MatchingDetails.MatchingDetails
+import GOLD.MLL.VirtualCloset.R
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
@@ -44,7 +48,7 @@ class ProductDetails : AppCompatActivity() {
         val add = findViewById<ImageButton>(R.id.addButton)
         val recyclerview = findViewById<RecyclerView>(R.id.matching)
 
-        val adapter = MatchingAdapter(clothsItem.matching)
+        val adapter = ProductAdapter(clothsItem.matching)
         recyclerview.layoutManager = LinearLayoutManager(this)
         recyclerview.adapter = adapter
         add.setOnClickListener {
