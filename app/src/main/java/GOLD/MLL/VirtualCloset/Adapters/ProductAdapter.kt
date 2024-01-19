@@ -51,6 +51,10 @@ class ProductAdapter(private var mList: List<String>)  : RecyclerView.Adapter<Pr
     override fun getItemCount(): Int {
         return mList.size
     }
+    fun updateList(newList: List<String>) {
+        mList = newList
+        notifyDataSetChanged()
+    }
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val prodImage: ImageButton = this.itemView.findViewById(R.id.prodImage)
         val details: TextView = this.itemView.findViewById(R.id.details)

@@ -1,18 +1,18 @@
 package GOLD.MLL.VirtualCloset.ProductDetails
 
+import GOLD.MLL.VirtualCloset.Adapters.ProductAdapter
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import GOLD.MLL.VirtualCloset.Adapters.ProductAdapter
 import GOLD.MLL.VirtualCloset.Cloths
 import GOLD.MLL.VirtualCloset.Home.Home
 import GOLD.MLL.VirtualCloset.MatchingDetails.MatchingDetails
 import GOLD.MLL.VirtualCloset.R
+import ProductViewModel
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
@@ -22,39 +22,44 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.firestore
-import com.google.firebase.storage.FirebaseStorage
 
 class ProductDetails : AppCompatActivity() {
-    private var db = Firebase.firestore
+    private lateinit var viewModel: ProductViewModel
+    private var adapter = ProductAdapter(listOf())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.detailed_screen)
 
-        val fullList = intent.getSerializableExtra("fullList") as List<Cloths>
-        val clothsItem = intent.getSerializableExtra("clothsItem") as Cloths
-        val switch = intent.getBooleanExtra("switch", true)
 
+        viewModel = ViewModelProvider(this)[ProductViewModel::class.java]
 
-        val containerRL = findViewById<ConstraintLayout>(R.id.containerRL)
-        val prodName = findViewById<TextView>(R.id.prodName)
-        val prod = findViewById<ImageView>(R.id.prod)
-        val prodBack = findViewById<ImageButton>(R.id.prodBack)
-        val like = findViewById<TextView>(R.id.like)
-        val edit = findViewById<ImageButton>(R.id.editButton)
-        val add = findViewById<ImageButton>(R.id.addButton)
         val recyclerview = findViewById<RecyclerView>(R.id.matching)
-
-        val adapter = ProductAdapter(clothsItem.matching)
         recyclerview.layoutManager = LinearLayoutManager(this)
         recyclerview.adapter = adapter
+
+        viewModel.setSelectedProduct(intent.getSerializableExtra("clothsItem") as Cloths)
+        var clothsItem = intent.getSerializableExtra("clothsItem") as Cloths
+        val switch = intent.getBooleanExtra("switch", true)
+
+        adapter.updateList(clothsItem.matching)
+
+        val containerRL = findViewById<ConstraintLayout>(R.id.containerRL)
+        val edit = findViewById<ImageButton>(R.id.editButton)
+        val add = findViewById<ImageButton>(R.id.addButton)
+
+        viewModel.selectedProduct.observe(this) { selectedProduct ->
+            clothsItem = selectedProduct
+            adapter.updateList(clothsItem.matching)
+            showClothData(selectedProduct)
+        }
         add.setOnClickListener {
             if (switch) {
                 val intent = Intent(this, MatchingDetails::class.java)
-                intent.putExtra("fullList", ArrayList(fullList))
                 intent.putExtra("clothsItem", clothsItem)
                 this.startActivity(intent)
             } else {
@@ -65,7 +70,6 @@ class ProductDetails : AppCompatActivity() {
             if (switch) {
                 val builder = AlertDialog.Builder(this)
                 val inflater: LayoutInflater = layoutInflater
-                val oldDocRef = db.collection(clothsItem.typeCloth).document(clothsItem.name)
                 val dialogLayout = inflater.inflate(R.layout.upload_dialog_box, null)
                 val newName = dialogLayout.findViewById<EditText>(R.id.name)
                 val adamLike = dialogLayout.findViewById<EditText>(R.id.adamLike)
@@ -80,62 +84,46 @@ class ProductDetails : AppCompatActivity() {
                 builder.setView(dialogLayout)
                 builder.setNeutralButton("Delete") { _, _ ->
                     Log.d("Main", "Delete button clicked")
-                    oldDocRef.delete()
-
-                    val fileRefByUrl = FirebaseStorage.getInstance().getReferenceFromUrl(clothsItem.photoUrl)
-                    fileRefByUrl.delete()
-                    val fileBackRefByUrl = FirebaseStorage.getInstance().getReferenceFromUrl(clothsItem.backsideUrl)
-                    fileBackRefByUrl.delete()
-
-                    for (i in fullList)
-                    {
-                        for (j in i.matching){
-                            if (clothsItem.name in j.split(",")){
-                                val docRef = db.collection(i.typeCloth).document(i.name)
-                                i.matching.remove("${clothsItem.name},${clothsItem.typeCloth},${clothsItem.sLike},${clothsItem.aLike},${clothsItem.photoUrl},${clothsItem.backsideUrl},${clothsItem.matching}")
-                                docRef.update("matching", i.matching)
-                            }
-                        }
-                    }
+                    viewModel.deleteProduct(clothsItem)
                     startActivity(intent)
 
                 }
                 builder.setPositiveButton("Ok") { _, _ ->
                     Log.d("Main", "Positive button clicked")
                     val updates = hashMapOf(
+                        "Folder" to if (typeSelector.isChecked) "Shirts" else "Pants",
                         "Name" to newName.text.toString(),
-                        "AdamLikes" to adamLike.text.toString().toInt(),
-                        "ShaharLikes" to shaharLike.text.toString().toInt(),
+                        "AdamLikes" to adamLike.text.toString(),
+                        "ShaharLikes" to shaharLike.text.toString(),
                         "URL" to clothsItem.photoUrl,
                         "BackSide" to clothsItem.backsideUrl,
                         "matching" to clothsItem.matching
                     )
-                    val newDocRef = db.collection(clothsItem.typeCloth).document(newName.text.toString())
-                    oldDocRef.delete()
-                    newDocRef.set(updates)
-                    startActivity(intent)
+                    viewModel.updateProduct(updates)
                 }
                 builder.setNegativeButton("Cancel") { _, _ ->
                     Log.d("Main", "Negative button clicked")
                 }
                 builder.show()
-            } else {
-                Toast.makeText(this, "Can't Edit In This Mode", Toast.LENGTH_SHORT).show()
             }
         }
 
-        val backgroundResId = if (switch) {
-            R.drawable.background_shahar
-        } else {
-            R.drawable.background_adam
-        }
-        containerRL.background = ResourcesCompat.getDrawable(resources, backgroundResId, null)
 
         val btnReturnHome = findViewById<ImageButton>(R.id.btnReturnHome)
         btnReturnHome.setOnClickListener {
             val intent = Intent(this, Home::class.java)
             startActivity(intent)
         }
+        val backgroundResId = if (switch) {R.drawable.background_shahar} else {R.drawable.background_adam}
+        containerRL.background = ResourcesCompat.getDrawable(resources, backgroundResId, null)
+        showClothData(clothsItem)
+    }
+
+    private fun showClothData(clothsItem: Cloths) {
+        val prodName = findViewById<TextView>(R.id.prodName)
+        val prod = findViewById<ImageView>(R.id.prod)
+        val prodBack = findViewById<ImageButton>(R.id.prodBack)
+        val like = findViewById<TextView>(R.id.like)
 
         if (clothsItem.backsideUrl != ""){
             val backsideBackground = findViewById<View>(R.id.backsideBackground)
@@ -151,7 +139,6 @@ class ProductDetails : AppCompatActivity() {
 
         if (currentProdBackUrl != "") {
             Glide.with(this).asDrawable().load(currentProdBackUrl).centerCrop().into(prodBack)
-
 
             prodBack.setOnClickListener {
                 val tempUrl = currentProdUrl

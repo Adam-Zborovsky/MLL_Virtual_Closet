@@ -2,6 +2,7 @@ package GOLD.MLL.VirtualCloset.Adapters
 
 import GOLD.MLL.VirtualCloset.Cloths
 import GOLD.MLL.VirtualCloset.R
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,12 +17,13 @@ import com.bumptech.glide.Glide
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 
+@SuppressLint("NotifyDataSetChanged")
 class MatchingAdapter(private var fullMatching: List<Cloths>, private var parent: Cloths)  : RecyclerView.Adapter<MatchingAdapter.ViewHolder>() {
     private var db = Firebase.firestore
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.edit_matrching_adapter, parent, false)
+            .inflate(R.layout.edit_matching_adapter, parent, false)
         val holder = ViewHolder(view)
 
         val add = view.findViewById<CheckBox>(R.id.addBox)
@@ -48,19 +50,15 @@ class MatchingAdapter(private var fullMatching: List<Cloths>, private var parent
         }
     }
 
-    private fun bigPicture(clothsList: Cloths, view: View) {
+    private fun bigPicture(cloth: Cloths, view: View) {
         val builder = AlertDialog.Builder(view.context)
         val inflater: LayoutInflater = LayoutInflater.from(view.context)
         val dialogLayout = inflater.inflate(R.layout.big_picture, null)
 
-        Log.e("clothsList",clothsList.toString())
         builder.setView(dialogLayout)
 
         val bigPicture = dialogLayout.findViewById<ImageView>(R.id.big_picture)
-        Glide.with(view)
-            .asDrawable()
-            .load(clothsList.photoUrl)
-            .into(bigPicture)
+        Glide.with(view).asDrawable().load(cloth.photoUrl).centerInside().into(bigPicture)
         builder.show()
     }
 
@@ -68,6 +66,8 @@ class MatchingAdapter(private var fullMatching: List<Cloths>, private var parent
 
         val collectionRef = db.collection(parent.typeCloth)
         val documentRef = collectionRef.document(parent.name)
+
+        Log.e("typeCloth", "parent.typeCloth")
 
         val itemToModify = clothsItem.toString()
 
@@ -92,22 +92,26 @@ class MatchingAdapter(private var fullMatching: List<Cloths>, private var parent
         return fullMatching.size
     }
     fun sortByALike() {
-        val sortedList = fullMatching.sortedByDescending { it.aLike}
-        updateList(sortedList)
+        val sortedList = fullMatching.sortedByDescending { it.aLike }
+        fullMatching = sortedList
+        notifyDataSetChanged()
     }
     fun sortBySLike() {
-        val sortedList = fullMatching.sortedByDescending { it.sLike}
-        updateList(sortedList)
+        val sortedList = fullMatching.sortedByDescending { it.sLike }
+        fullMatching = sortedList
+        notifyDataSetChanged()
+    }
+    fun filterCloths(typeCloth: String) {
+        val filteredList = fullMatching.filter {it.typeCloth != typeCloth}
+        fullMatching = filteredList
+        notifyDataSetChanged()
     }
     fun sortRandomly() {
         fullMatching = fullMatching.shuffled()
-        updateList(fullMatching)
+        notifyDataSetChanged()
     }
-    fun filterCloths(typeCloth: String?) {
-        val filteredList = fullMatching.filter {it.typeCloth != typeCloth}
-        updateList(filteredList)
-    }
-    private fun updateList(newList: List<Cloths>) {
+    fun updateList(newList: List<Cloths>, selectedItem: Cloths) {
+        parent = selectedItem
         fullMatching = newList
         notifyDataSetChanged()
     }

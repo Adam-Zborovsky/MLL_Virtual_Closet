@@ -16,7 +16,7 @@
             android:id="@+id/matching_edit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="60dp"
             app:layout_constraintBottom_toBottomOf="@id/containerRL"
             app:layout_constraintEnd_toEndOf="@id/containerRL" />
 

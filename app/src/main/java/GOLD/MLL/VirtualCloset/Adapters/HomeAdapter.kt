@@ -12,7 +12,9 @@
     import com.bumptech.glide.Glide
     import GOLD.MLL.VirtualCloset.Cloths
     import GOLD.MLL.VirtualCloset.ProductDetails.ProductDetails
+    import android.annotation.SuppressLint
 
+    @SuppressLint("NotifyDataSetChanged")
     class HomeAdapter(private var mList: List<Cloths>) : RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
         private var fullList: List<Cloths> = mList
         private var switch: Boolean = false
@@ -23,7 +25,6 @@
             val holder = ViewHolder(view)
             view.setOnClickListener{
                 val intent = Intent(parent.context, ProductDetails::class.java)
-                intent.putExtra("fullList", ArrayList(mList))
                 intent.putExtra("clothsItem", mList[holder.adapterPosition])
                 intent.putExtra("switch", switch)
                 parent.context.startActivity(intent)
@@ -48,26 +49,28 @@
         }
         fun sortByALike() {
             val sortedList = mList.sortedByDescending { it.aLike }
-            updateList(sortedList)
+            mList = sortedList
+            notifyDataSetChanged()
         }
         fun sortBySLike() {
             val sortedList = mList.sortedByDescending { it.sLike }
-            updateList(sortedList)
+            mList = sortedList
+            notifyDataSetChanged()
         }
         fun filterCloths(showShirts: Boolean, showPants: Boolean) {
             val filteredList = fullList.filter {
-                Log.e("showPants", (showPants && it.typeCloth == "Pants").toString())
-                Log.e("showShirts", (showShirts && it.typeCloth == "Shirts").toString())
-                (showShirts && it.typeCloth == "Shirts") || (showPants && it.typeCloth == "Pants")
-            }
-            updateList(filteredList)
+                (showShirts && it.typeCloth == "Shirts") || (showPants && it.typeCloth == "Pants")}
+            Log.e("List", arrayListOf<Any>(showPants,showShirts,filteredList.toString()).toString())
+            mList = filteredList
+            notifyDataSetChanged()
         }
         fun sortRandomly() {
             mList = mList.shuffled()
-            updateList(mList)
+            notifyDataSetChanged()
         }
         fun updateList(newList: List<Cloths>) {
             mList = newList
+            fullList = newList
             notifyDataSetChanged()
         }
         class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

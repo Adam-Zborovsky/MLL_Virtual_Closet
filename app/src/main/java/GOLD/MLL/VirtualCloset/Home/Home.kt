@@ -115,7 +115,6 @@ class Home : ComponentActivity() {
                 }
             }
         uploadButton.setOnClickListener {
-            Log.i("Upload Button", "pressed")
             chooseImage.launch(pickImg)
             metaOfFile(chooseBackImage)
         }
@@ -184,7 +183,7 @@ class Home : ComponentActivity() {
 //            if (items.none { it.name == name.text.toString() }) {
             viewModel.uploadFile(metadata, uri, backUri)
 //            } else (Toast.makeText(this, "Item With That Name Already Exists", Toast.LENGTH_SHORT).show())
-//            dialog.dismiss()
+            dialog.dismiss()
         }
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener {
             Log.d("Main", "Negative button clicked")
