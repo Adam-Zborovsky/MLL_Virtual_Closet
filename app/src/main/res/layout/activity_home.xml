@@ -99,7 +99,7 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="Impure"
+                        android:text="Adam"
                         android:textColor="@color/white"
                         android:textSize="14sp"
                         tools:ignore="HardcodedText,TextContrastCheck,VisualLintBounds" />
@@ -111,7 +111,7 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="Yael"
+                        android:text="Shahar"
                         android:textColor="#4282DC"
                         android:textSize="14sp"
                         tools:ignore="HardcodedText,TextContrastCheck,VisualLintBounds" />

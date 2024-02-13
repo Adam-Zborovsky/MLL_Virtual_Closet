@@ -33,7 +33,7 @@ class ProductAdapter(private var mList: List<String>)  : RecyclerView.Adapter<Pr
             .load(cloth[4])
             .into(holder.prodImage)
 
-        holder.details.text = "${cloth[0]}\nImpure: ${cloth[2]}\nYael: ${cloth[3]}"
+        holder.details.text = "${cloth[0]}\nAdam: ${cloth[2]}\nShahar: ${cloth[3]}"
 
     }
     private fun bigPicture(cloth: String, view: View) {
