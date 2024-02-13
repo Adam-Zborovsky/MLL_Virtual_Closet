@@ -99,7 +99,7 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="View"
+                        android:text="Impure"
                         android:textColor="@color/white"
                         android:textSize="14sp"
                         tools:ignore="HardcodedText,TextContrastCheck,VisualLintBounds" />
@@ -111,7 +111,7 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="Edit"
+                        android:text="Yael"
                         android:textColor="#4282DC"
                         android:textSize="14sp"
                         tools:ignore="HardcodedText,TextContrastCheck,VisualLintBounds" />

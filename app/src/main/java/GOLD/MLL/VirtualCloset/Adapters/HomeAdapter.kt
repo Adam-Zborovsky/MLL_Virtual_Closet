@@ -37,7 +37,7 @@
             Glide.with(holder.itemView.context).asDrawable().load(clothsList.photoUrl).centerCrop().into(holder.image)
 
             holder.name.text = clothsList.name
-            holder.likes.text = "View User: ${clothsList.aLike}   Edit User: ${clothsList.sLike}"
+            holder.likes.text = "Impure: ${clothsList.aLike}   Yael: ${clothsList.sLike}"
         }
 
         override fun getItemCount(): Int {
