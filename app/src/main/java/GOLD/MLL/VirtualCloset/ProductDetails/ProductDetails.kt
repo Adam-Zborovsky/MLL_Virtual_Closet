@@ -135,7 +135,7 @@ class ProductDetails : AppCompatActivity() {
 
         Glide.with(this).asDrawable().load(currentProdUrl).centerCrop().into(prod)
         prodName.text = clothsItem.name
-        like.text = "View User: ${clothsItem.aLike}          Edit User: ${clothsItem.sLike}"
+        like.text = "Adam: ${clothsItem.aLike}          Shahar: ${clothsItem.sLike}"
 
         if (currentProdBackUrl != "") {
             Glide.with(this).asDrawable().load(currentProdBackUrl).centerCrop().into(prodBack)

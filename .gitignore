@@ -8,9 +8,12 @@
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
 /gradle
+\gradle\daemon
 .DS_Store
 /build
 /captures
 .externalNativeBuild
 .cxx
 local.properties
+gradle/daemon/8.2/registry.bin
+gradle/daemon/8.2/registry.bin.lock
