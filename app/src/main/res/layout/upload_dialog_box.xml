@@ -62,7 +62,11 @@
         android:layout_gravity="center"
         android:autofillHints=""
         android:ems="10"
+<<<<<<< Updated upstream
         android:hint="Edit User Rating: E.g: ?/10"
+=======
+        android:hint="Shahar Rating: E.g: ?/100"
+>>>>>>> Stashed changes
         android:inputType="number"
         android:minHeight="48dp" />
 
@@ -73,7 +77,11 @@
         android:layout_gravity="center"
         android:autofillHints=""
         android:ems="10"
+<<<<<<< Updated upstream
         android:hint="View User Rating: E.g: ?/10"
+=======
+        android:hint="Adam Rating: E.g: ?/100"
+>>>>>>> Stashed changes
         android:inputType="number"
         android:minHeight="48dp" />
 

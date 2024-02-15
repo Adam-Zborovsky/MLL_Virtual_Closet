@@ -89,7 +89,6 @@ class ProductDetails : AppCompatActivity() {
 
                 }
                 builder.setPositiveButton("Ok") { _, _ ->
-                    Log.d("Main", "Positive button clicked")
                     val updates = hashMapOf(
                         "Folder" to if (typeSelector.isChecked) "Shirts" else "Pants",
                         "Name" to newName.text.toString(),
@@ -100,6 +99,8 @@ class ProductDetails : AppCompatActivity() {
                         "matching" to clothsItem.matching
                     )
                     viewModel.updateProduct(updates)
+                    Log.e("Updated", "Updated")
+
                 }
                 builder.setNegativeButton("Cancel") { _, _ ->
                     Log.d("Main", "Negative button clicked")

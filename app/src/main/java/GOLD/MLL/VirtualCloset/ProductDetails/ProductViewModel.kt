@@ -25,9 +25,7 @@ class ProductViewModel(application: Application) : AndroidViewModel(application)
         }
     }
     fun updateProduct(updates: HashMap<String, Serializable>) {
-        viewModelScope.launch {
-            val fetchedProducts = repository.updateProduct(updates, selectedProduct.value!!)
-            _selectedProduct.postValue(fetchedProducts)
-        }
+        val fetchedProducts = repository.updateProduct(updates, selectedProduct.value!!)
+        _selectedProduct.postValue(fetchedProducts)
     }
 }

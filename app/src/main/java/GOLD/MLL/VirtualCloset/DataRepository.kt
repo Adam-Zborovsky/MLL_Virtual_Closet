@@ -122,6 +122,7 @@ class DataRepository(context: Context) {
                 fileRefByUrl.delete()
                 newFileRef.downloadUrl.addOnSuccessListener { newUrl ->
                     updates["URL"] = newUrl.toString()
+                    Log.e("Here","Here")
                     val newDocRef = db.collection(updates["Folder"].toString()).document(updates["Name"].toString())
                     newDocRef.set(updates)
                 }
@@ -141,7 +142,24 @@ class DataRepository(context: Context) {
                 }
             }
         }
+<<<<<<< Updated upstream
         return Cloths(updates["Name"].toString(), updates["Folder"].toString(), updates["ShaharLikes"].toString().toInt(), updates["AdamLikes"].toString().toInt(), updates["URL"].toString(), updates["BackSide"].toString(), updates["matching"] as ArrayList<String>)
+=======
+        val newProduct = Cloths(updates["Name"].toString(), updates["Folder"].toString(), updates["ShaharLikes"].toString().toInt(), updates["AdamLikes"].toString().toInt(), updates["URL"].toString(), updates["BackSide"].toString(), updates["matching"] as ArrayList<String>)
+        val fullList = getCachedProducts()!!.toMutableList()
+        Log.e("Fullist", fullList.toString())
+        val iterator = fullList.iterator()
+        while (iterator.hasNext()) {
+            val i = iterator.next()
+            Log.e("i.name", i.name)
+            Log.e("clothsItem.name", clothsItem.name)
+            if (i.name == clothsItem.name) {
+                iterator.remove()
+            }
+        }
+        cacheProducts(fullList)
+        return newProduct
+>>>>>>> Stashed changes
 
     }
 

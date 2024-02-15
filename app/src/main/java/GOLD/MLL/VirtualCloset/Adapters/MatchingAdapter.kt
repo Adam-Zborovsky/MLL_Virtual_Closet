@@ -42,6 +42,7 @@ class MatchingAdapter(private var fullMatching: List<Cloths>, private var parent
 
         for (i in parent.matching) {
             if (i.split(",")[0] == clothsItem.name) {
+                Log.e("matching", i.split(",")[0])
                 holder.addBox.isChecked = true}
         }
 
@@ -72,6 +73,7 @@ class MatchingAdapter(private var fullMatching: List<Cloths>, private var parent
         val itemToModify = clothsItem.toString()
 
 
+        Log.e("Firestore", "Add Item")
         if (isChecked) {
             parent.matching.add(itemToModify)
             Log.e("Firestore", "Add Item")
