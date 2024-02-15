@@ -143,9 +143,14 @@ class DataRepository(context: Context) {
         }
         val newProduct = Cloths(updates["Name"].toString(), updates["Folder"].toString(), updates["ShaharLikes"].toString().toInt(), updates["AdamLikes"].toString().toInt(), updates["URL"].toString(), updates["BackSide"].toString(), updates["matching"] as ArrayList<String>)
         val fullList = getCachedProducts()!!.toMutableList()
-        for (i in fullList){
-            if (i.name == clothsItem.name){fullList.remove(i)}
+        val iterator = fullList.iterator()
+        while (iterator.hasNext()) {
+            val i = iterator.next()
+            if (i.name == clothsItem.name) {
+                iterator.remove()
+            }
         }
+
         cacheProducts(fullList)
         return newProduct
 
