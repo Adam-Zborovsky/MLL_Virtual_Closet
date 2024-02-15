@@ -112,46 +112,59 @@ class DataRepository(context: Context) {
         cacheProducts(newList)
         return newList
     }
-    fun updateProduct(updates: HashMap<String, Serializable>, clothsItem: Cloths): Cloths {
+    suspend fun updateProduct(updates: HashMap<String, Serializable>, clothsItem: Cloths): Cloths {
         val oldDocRef = db.collection(clothsItem.typeCloth).document(clothsItem.name)
         oldDocRef.delete()
         val fileRefByUrl = FirebaseStorage.getInstance().getReferenceFromUrl(clothsItem.photoUrl)
         val newFileRef = FirebaseStorage.getInstance().reference.child("${updates["Folder"].toString()}/${updates["Name"].toString()}")
-        fileRefByUrl.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytes ->
-            newFileRef.putBytes(bytes).addOnSuccessListener {
-                fileRefByUrl.delete()
-                newFileRef.downloadUrl.addOnSuccessListener { newUrl ->
-                    updates["URL"] = newUrl.toString()
-                    val newDocRef = db.collection(updates["Folder"].toString()).document(updates["Name"].toString())
-                    newDocRef.set(updates)
-                }
-            }
-        }
-        if (clothsItem.backsideUrl != "")  {
+
+        val bytes = fileRefByUrl.getBytes(Long.MAX_VALUE).await()
+        newFileRef.putBytes(bytes).await()
+        fileRefByUrl.delete()
+        val newUrl = newFileRef.downloadUrl.await()
+        updates["URL"] = newUrl.toString()
+
+        if (clothsItem.backsideUrl != "") {
             val fileRefByUrl = FirebaseStorage.getInstance().getReferenceFromUrl(clothsItem.backsideUrl)
             val newFileRef = FirebaseStorage.getInstance().reference.child("BackSide/${updates["Folder"].toString()}/${updates["Name"].toString()}")
-            fileRefByUrl.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytes ->
-                newFileRef.putBytes(bytes).addOnSuccessListener {
-                    fileRefByUrl.delete()
-                    newFileRef.downloadUrl.addOnSuccessListener { newUrl ->
-                        updates["BackSide"] = newUrl.toString()
-                        val newDocRef = db.collection(updates["Folder"].toString()).document(updates["Name"].toString())
-                        newDocRef.set(updates)
-                    }
-                }
-            }
+            val bytes = fileRefByUrl.getBytes(Long.MAX_VALUE).await()
+            newFileRef.putBytes(bytes).await()
+            fileRefByUrl.delete()
+            val newUrl = newFileRef.downloadUrl.await()
+            updates["BackSide"] = newUrl.toString()
         }
+
+        val newDocRef = db.collection(updates["Folder"].toString()).document(updates["Name"].toString())
+        newDocRef.set(updates)
+
         val newProduct = Cloths(updates["Name"].toString(), updates["Folder"].toString(), updates["ShaharLikes"].toString().toInt(), updates["AdamLikes"].toString().toInt(), updates["URL"].toString(), updates["BackSide"].toString(), updates["matching"] as ArrayList<String>)
         val fullList = getCachedProducts()!!.toMutableList()
-        val iterator = fullList.iterator()
+        var iterator = fullList.iterator()
+
+        val clothsToEdit = arrayListOf<Cloths>()
         while (iterator.hasNext()) {
             val i = iterator.next()
+            for (j in i.matching) {
+                if (clothsItem.name in j.split(",")) {clothsToEdit.add(i)}
+            }
             if (i.name == clothsItem.name) {
                 iterator.remove()
             }
         }
 
+        Log.e("URL",updates["URL"].toString())
+        iterator = clothsToEdit.iterator()
+        while (iterator.hasNext()) {
+            val i = iterator.next()
+            val docRef = db.collection(i.typeCloth).document(i.name)
+            i.matching.remove("${clothsItem.name},${clothsItem.typeCloth},${clothsItem.sLike},${clothsItem.aLike},${clothsItem.photoUrl},${clothsItem.backsideUrl},${clothsItem.matching}")
+            i.matching.add("${newProduct.name},${newProduct.typeCloth},${newProduct.sLike},${newProduct.aLike},${newProduct.photoUrl},${newProduct.backsideUrl},${newProduct.matching}")
+            docRef.update("matching", i.matching)
+        }
+
+
         cacheProducts(fullList)
+        cacheOneProduct(newProduct)
         return newProduct
 
     }

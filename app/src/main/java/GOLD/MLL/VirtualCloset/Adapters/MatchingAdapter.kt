@@ -38,7 +38,7 @@ class MatchingAdapter(private var fullMatching: List<Cloths>, private var parent
 
         Glide.with(holder.itemView.context).asDrawable().load(clothsItem.photoUrl).into(holder.prodImage)
 
-        holder.details.text = "${clothsItem.name}\nImpure: ${clothsItem.aLike}\nYael: ${clothsItem.sLike}"
+        holder.details.text = "${clothsItem.name}\nAdam: ${clothsItem.aLike}\nShahar: ${clothsItem.sLike}"
 
         for (i in parent.matching) {
             if (i.split(",")[0] == clothsItem.name) {
@@ -67,9 +67,10 @@ class MatchingAdapter(private var fullMatching: List<Cloths>, private var parent
         val collectionRef = db.collection(parent.typeCloth)
         val documentRef = collectionRef.document(parent.name)
 
-        Log.e("typeCloth", "parent.typeCloth")
 
         val itemToModify = clothsItem.toString()
+
+        Log.e("itemToModify", itemToModify)
 
 
         if (isChecked) {
