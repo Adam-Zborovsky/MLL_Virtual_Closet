@@ -38,11 +38,10 @@ class MatchingAdapter(private var fullMatching: List<Cloths>, private var parent
 
         Glide.with(holder.itemView.context).asDrawable().load(clothsItem.photoUrl).into(holder.prodImage)
 
-        holder.details.text = "${clothsItem.name}\nView User: ${clothsItem.aLike}\nEdit User: ${clothsItem.sLike}"
+        holder.details.text = "${clothsItem.name}\nAdam: ${clothsItem.aLike}\nShahar: ${clothsItem.sLike}"
 
         for (i in parent.matching) {
             if (i.split(",")[0] == clothsItem.name) {
-                Log.e("matching", i.split(",")[0])
                 holder.addBox.isChecked = true}
         }
 
@@ -68,12 +67,12 @@ class MatchingAdapter(private var fullMatching: List<Cloths>, private var parent
         val collectionRef = db.collection(parent.typeCloth)
         val documentRef = collectionRef.document(parent.name)
 
-        Log.e("typeCloth", "parent.typeCloth")
 
         val itemToModify = clothsItem.toString()
 
+        Log.e("itemToModify", itemToModify)
 
-        Log.e("Firestore", "Add Item")
+
         if (isChecked) {
             parent.matching.add(itemToModify)
             Log.e("Firestore", "Add Item")
