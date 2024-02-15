@@ -148,8 +148,6 @@ class DataRepository(context: Context) {
         val iterator = fullList.iterator()
         while (iterator.hasNext()) {
             val i = iterator.next()
-            Log.e("i.name", i.name)
-            Log.e("clothsItem.name", clothsItem.name)
             if (i.name == clothsItem.name) {
                 iterator.remove()
             }
