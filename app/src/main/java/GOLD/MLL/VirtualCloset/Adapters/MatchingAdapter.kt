@@ -67,9 +67,10 @@ class MatchingAdapter(private var fullMatching: List<Cloths>, private var parent
         val collectionRef = db.collection(parent.typeCloth)
         val documentRef = collectionRef.document(parent.name)
 
-        Log.e("typeCloth", "parent.typeCloth")
 
         val itemToModify = clothsItem.toString()
+
+        Log.e("itemToModify", itemToModify)
 
 
         if (isChecked) {
