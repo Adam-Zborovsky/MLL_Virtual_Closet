@@ -13,6 +13,8 @@
     import GOLD.MLL.VirtualCloset.Cloths
     import GOLD.MLL.VirtualCloset.ProductDetails.ProductDetails
     import android.annotation.SuppressLint
+    import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+    import com.bumptech.glide.request.RequestOptions
 
     @SuppressLint("NotifyDataSetChanged")
     class HomeAdapter(private var mList: List<Cloths>) : RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
@@ -34,7 +36,12 @@
         }
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val clothsList = mList[position]
-            Glide.with(holder.itemView.context).asDrawable().load(clothsList.photoUrl).centerCrop().into(holder.image)
+            Glide.with(holder.itemView.context)
+                .asDrawable()
+                .load(clothsList.photoUrl)
+                .centerCrop()
+                .apply(RequestOptions.bitmapTransform(RoundedCorners(50)))
+                .into(holder.image)
 
             holder.name.text = clothsList.name
             holder.likes.text = "View User: ${clothsList.aLike}   Edit User: ${clothsList.sLike}"

@@ -11,6 +11,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 
 class WishlistAdapter(private var mList: MutableMap<String, String>)  : RecyclerView.Adapter<WishlistAdapter.ViewHolder>() {
 
@@ -42,7 +44,11 @@ class WishlistAdapter(private var mList: MutableMap<String, String>)  : Recycler
 
             val url = entriesList[position].value
 
-            Glide.with(holder.itemView.context).asDrawable().load(url).into(holder.prodImage)
+            Glide.with(holder.itemView.context)
+                .asDrawable()
+                .load(url)
+                .apply(RequestOptions.bitmapTransform(RoundedCorners(50)))
+                .into(holder.prodImage)
 
             holder.details.text = entriesList[position].key
             holder.remove.setOnClickListener{

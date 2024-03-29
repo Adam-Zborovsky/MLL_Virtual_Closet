@@ -14,6 +14,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 
@@ -36,7 +38,11 @@ class MatchingAdapter(private var fullMatching: List<Cloths>, private var parent
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val clothsItem = fullMatching[position]
 
-        Glide.with(holder.itemView.context).asDrawable().load(clothsItem.photoUrl).into(holder.prodImage)
+        Glide.with(holder.itemView.context)
+            .asDrawable()
+            .load(clothsItem.photoUrl)
+            .apply(RequestOptions.bitmapTransform(RoundedCorners(50)))
+            .into(holder.prodImage)
 
         holder.details.text = "${clothsItem.name}\nAdam: ${clothsItem.aLike}\nShahar: ${clothsItem.sLike}"
 
@@ -58,7 +64,12 @@ class MatchingAdapter(private var fullMatching: List<Cloths>, private var parent
         builder.setView(dialogLayout)
 
         val bigPicture = dialogLayout.findViewById<ImageView>(R.id.big_picture)
-        Glide.with(view).asDrawable().load(cloth.photoUrl).centerInside().into(bigPicture)
+        Glide.with(view)
+            .asDrawable()
+            .load(cloth.photoUrl)
+            .centerInside()
+            .apply(RequestOptions.bitmapTransform(RoundedCorners(50)))
+            .into(bigPicture)
         builder.show()
     }
 

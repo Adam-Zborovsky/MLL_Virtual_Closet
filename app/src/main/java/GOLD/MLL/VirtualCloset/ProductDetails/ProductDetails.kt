@@ -26,6 +26,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 
 class ProductDetails : AppCompatActivity() {
     private lateinit var viewModel: ProductViewModel
@@ -139,15 +141,28 @@ class ProductDetails : AppCompatActivity() {
         like.text = "View User: ${clothsItem.aLike}          Edit User: ${clothsItem.sLike}"
 
         if (currentProdBackUrl != "") {
-            Glide.with(this).asDrawable().load(currentProdBackUrl).centerCrop().into(prodBack)
+            Glide.with(this)
+                .asDrawable()
+                .load(currentProdBackUrl)
+                .centerCrop()
+                .apply(RequestOptions.bitmapTransform(RoundedCorners(50)))
+                .into(prodBack)
 
             prodBack.setOnClickListener {
                 val tempUrl = currentProdUrl
                 currentProdUrl = currentProdBackUrl
                 currentProdBackUrl = tempUrl
-                Glide.with(this).asDrawable().load(currentProdUrl).centerCrop().into(prod)
-                Glide.with(this).asDrawable().load(currentProdBackUrl)
+                Glide.with(this)
+                    .asDrawable()
+                    .load(currentProdUrl)
                     .centerCrop()
+                    .apply(RequestOptions.bitmapTransform(RoundedCorners(50)))
+                    .into(prod)
+                Glide.with(this)
+                    .asDrawable()
+                    .load(currentProdBackUrl)
+                    .centerCrop()
+                    .apply(RequestOptions.bitmapTransform(RoundedCorners(50)))
                     .into(prodBack)
 
             }

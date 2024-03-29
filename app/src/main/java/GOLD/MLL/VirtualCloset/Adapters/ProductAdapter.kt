@@ -10,6 +10,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 
 class ProductAdapter(private var mList: List<String>)  : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
 
@@ -31,6 +33,7 @@ class ProductAdapter(private var mList: List<String>)  : RecyclerView.Adapter<Pr
         Glide.with(holder.itemView.context)
             .asDrawable()
             .load(cloth[4])
+            .apply(RequestOptions.bitmapTransform(RoundedCorners(50)))
             .into(holder.prodImage)
 
         holder.details.text = "${cloth[0]}\nView User: ${cloth[2]}\nEdit User: ${cloth[3]}"
@@ -45,7 +48,12 @@ class ProductAdapter(private var mList: List<String>)  : RecyclerView.Adapter<Pr
         builder.setView(dialogLayout)
 
         val bigPicture = dialogLayout.findViewById<ImageView>(R.id.big_picture)
-        Glide.with(view).asDrawable().load(url).centerInside().into(bigPicture)
+        Glide.with(view)
+            .asDrawable()
+            .load(url)
+            .centerInside()
+            .apply(RequestOptions.bitmapTransform(RoundedCorners(50)))
+            .into(bigPicture)
         builder.show()
     }
     override fun getItemCount(): Int {
