@@ -28,8 +28,6 @@ class MatchingAdapter(private var fullMatching: List<Cloths>, private var parent
             .inflate(R.layout.edit_matching_adapter, parent, false)
         val holder = ViewHolder(view)
 
-        val add = view.findViewById<CheckBox>(R.id.addBox)
-        add.visibility = View.VISIBLE
         val prodImage = view.findViewById<ImageButton>(R.id.prodImage)
         prodImage.setOnClickListener { bigPicture(fullMatching[holder.adapterPosition], view) }
 

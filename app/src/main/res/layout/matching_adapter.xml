@@ -28,16 +28,38 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="20dp"
+
             android:layout_weight="1"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/move_List"
+            android:visibility="gone"
+            android:layout_width="15dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:layout_marginStart="20dp"
             android:orientation="vertical">
 
+            <ImageButton
+                android:id="@+id/arrow_up"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:contentDescription="arrow_up"
+                app:srcCompat="@drawable/arrow_up" />
+
+            <ImageButton
+                android:id="@+id/arrow_down"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="35dp"
+                android:layout_marginEnd="1dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="arrow_down"
+                app:srcCompat="@drawable/arrow_down" />
         </LinearLayout>
 
     </LinearLayout>

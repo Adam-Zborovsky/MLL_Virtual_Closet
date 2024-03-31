@@ -18,6 +18,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SwitchCompat
@@ -47,6 +48,11 @@ class ProductDetails : AppCompatActivity() {
         viewModel.setSelectedProduct(intent.getSerializableExtra("clothsItem") as Cloths)
         var clothsItem = intent.getSerializableExtra("clothsItem") as Cloths
         val switch = intent.getBooleanExtra("switch", true)
+
+        if (switch){
+            val showArrows= findViewById<LinearLayout>(R.id.move_List)
+            showArrows.visibility = View.VISIBLE
+        }
 
         adapter.updateList(clothsItem.matching)
 
