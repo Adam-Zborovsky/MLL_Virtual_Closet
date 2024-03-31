@@ -32,7 +32,7 @@ import com.bumptech.glide.request.RequestOptions
 
 class ProductDetails : AppCompatActivity() {
     private lateinit var viewModel: ProductViewModel
-    private var adapter = ProductAdapter(listOf())
+    private var adapter = ProductAdapter(listOf(), false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,12 +49,8 @@ class ProductDetails : AppCompatActivity() {
         var clothsItem = intent.getSerializableExtra("clothsItem") as Cloths
         val switch = intent.getBooleanExtra("switch", true)
 
-        if (switch){
-            val showArrows= findViewById<LinearLayout>(R.id.move_List)
-            showArrows.visibility = View.VISIBLE
-        }
 
-        adapter.updateList(clothsItem.matching)
+        adapter.updateList(clothsItem.matching, switch)
 
         val containerRL = findViewById<ConstraintLayout>(R.id.containerRL)
         val edit = findViewById<ImageButton>(R.id.editButton)
@@ -62,7 +58,7 @@ class ProductDetails : AppCompatActivity() {
 
         viewModel.selectedProduct.observe(this) { selectedProduct ->
             clothsItem = selectedProduct
-            adapter.updateList(clothsItem.matching)
+            adapter.updateList(clothsItem.matching, switch)
             showClothData(selectedProduct)
         }
         add.setOnClickListener {

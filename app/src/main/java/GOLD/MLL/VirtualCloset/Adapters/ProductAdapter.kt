@@ -7,13 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 
-class ProductAdapter(private var mList: List<String>)  : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
+class ProductAdapter(private var mList: List<String>, private var switch: Boolean)  : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -21,12 +22,14 @@ class ProductAdapter(private var mList: List<String>)  : RecyclerView.Adapter<Pr
         val holder = ViewHolder(view)
 
         val prodImage = view.findViewById<ImageButton>(R.id.prodImage)
+        val showArrows = view.findViewById<LinearLayout>(R.id.move_List)
         val arrowUp = view.findViewById<ImageButton>(R.id.arrow_up)
         val arrowDown = view.findViewById<ImageButton>(R.id.arrow_down)
 
         prodImage.setOnClickListener { bigPicture(mList[holder.adapterPosition], view) }
         arrowUp.setOnClickListener { bigPicture(mList[holder.adapterPosition], view) }
         arrowDown.setOnClickListener { bigPicture(mList[holder.adapterPosition], view) }
+        if (switch){showArrows.visibility = View.VISIBLE}
 
         return holder
     }
@@ -64,8 +67,9 @@ class ProductAdapter(private var mList: List<String>)  : RecyclerView.Adapter<Pr
     override fun getItemCount(): Int {
         return mList.size
     }
-    fun updateList(newList: List<String>) {
+    fun updateList(newList: List<String>, newSwitch: Boolean) {
         mList = newList
+        switch = newSwitch
         notifyDataSetChanged()
     }
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
