@@ -22,14 +22,8 @@ class ProductAdapter(private var mList: List<String>, private var switch: Boolea
         val holder = ViewHolder(view)
 
         val prodImage = view.findViewById<ImageButton>(R.id.prodImage)
-        val showArrows = view.findViewById<LinearLayout>(R.id.move_List)
-        val arrowUp = view.findViewById<ImageButton>(R.id.arrow_up)
-        val arrowDown = view.findViewById<ImageButton>(R.id.arrow_down)
 
         prodImage.setOnClickListener { bigPicture(mList[holder.adapterPosition], view) }
-        arrowUp.setOnClickListener { bigPicture(mList[holder.adapterPosition], view) }
-        arrowDown.setOnClickListener { bigPicture(mList[holder.adapterPosition], view) }
-        if (switch){showArrows.visibility = View.VISIBLE}
 
         return holder
     }
