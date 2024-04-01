@@ -138,7 +138,12 @@ class ProductDetails : AppCompatActivity() {
         var currentProdUrl = clothsItem.photoUrl
         var currentProdBackUrl = clothsItem.backsideUrl
 
-        Glide.with(this).asDrawable().load(currentProdUrl).centerCrop().into(prod)
+        Glide.with(this)
+            .asDrawable()
+            .load(currentProdUrl)
+            .centerCrop()
+            .apply(RequestOptions.bitmapTransform(RoundedCorners(50)))
+            .into(prod)
         prodName.text = clothsItem.name
         like.text = "View User: ${clothsItem.aLike}          Edit User: ${clothsItem.sLike}"
 
